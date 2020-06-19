@@ -326,10 +326,18 @@ comparison<-function(iterations,showerduration,C.water){
   model<-c(rep("Schoen & Ashbolt",iterations),rep("Hamilton",iterations*2),rep("Combined",iterations*3))
   showertype<-c(rep("conventional or unspecified",iterations*2),rep("water efficient",iterations),rep("combined",iterations*3))
   
-  frameall<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
+  frameall<<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
   
   ggplot(data=frameall)+geom_boxplot(aes(x=model,y=infectionrisk.all,colour=showertype))+scale_y_continuous(trans="log10",name="Infection Risk")+
   scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")
 }
 
 comparison(10000,8,.1)
+
+A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
+B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")
+
+ggarrange(A,B)
+
+ggplot(frameall)+geom_density(aes(x=infection.risk,group=interaction(showertype,model),fill=interaction(showertype,model)),alpha=0.3)+scale_x_continuous(trans="log10")
+
