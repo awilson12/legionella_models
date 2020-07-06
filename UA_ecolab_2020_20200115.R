@@ -198,26 +198,40 @@ P.infection.eff<-rep(0,iterations)
   
   #CONVENTIONAL
   #concentration of aerosols at diameter 1-2
-  C.aer.12.conv<-rlnorm(iterations,17.5,0.30)
+  C.aer.1.conv<-rlnorm(iterations,17.5,0.30)
   
   #concentration of aerosols at diameter 2-3
-  C.aer.23.conv<-rlnorm(iterations,17.5,0.17)
+  C.aer.2.conv<-rlnorm(iterations,17.5,0.17)
   
   #concentration of aerosols at diameter 3-6
-  C.aer.36.conv<-rlnorm(iterations,19.5,0.35)
+  C.aer.3.conv<-rlnorm(iterations,19.5,0.35)
+  C.aer.4.conv<-rlnorm(iterations,19.5,0.35)
+  C.aer.5.conv<-rlnorm(iterations,19.5,0.35)
   
   #concentration of aerosols at diameter 6-10
-  C.aer.610.conv<-rlnorm(iterations,20,0.31)
+  C.aer.6.conv<-rlnorm(iterations,20,0.31)
+  C.aer.7.conv<-rlnorm(iterations,20,0.31)
+  C.aer.8.conv<-rlnorm(iterations,20,0.31)
+  C.aer.9.conv<-rlnorm(iterations,20,0.31)
+  C.aer.10.conv<-rlnorm(iterations,20,0.31)
   
   #WATER EFFICIENT
   #concentration of aerosols at diameter 1-2
-  C.aer.12.eff<-rlnorm(iterations,18.1,0.57)
+  C.aer.1.eff<-rlnorm(iterations,18.1,0.57)
   #concentration of aerosols at diameter 2-3
-  C.aer.23.eff<-rlnorm(iterations,17.9,0.64)
+  C.aer.2.eff<-rlnorm(iterations,17.9,0.64)
   #concentration of aerosols at diameter 3-6
-  C.aer.36.eff<-rlnorm(iterations,18.7,0.52)
+  C.aer.3.eff<-rlnorm(iterations,18.7,0.52)
+  C.aer.4.eff<-rlnorm(iterations,18.7,0.52)
+  C.aer.5.eff<-rlnorm(iterations,18.7,0.52)
   #concentration of aerosols at diameter 6-10
-  C.aer.610.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.6.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.7.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.8.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.8.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.8.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.9.eff<-rlnorm(iterations,18.3,0.14)
+  C.aer.10.eff<-rlnorm(iterations,18.3,0.14)
   
   #deposition efficiencies
   DE.1<-runif(iterations,0.23,0.25)
@@ -255,23 +269,27 @@ P.infection.eff<-rep(0,iterations)
   V.9<-(4/3)*pi*(9*10^(-6)/2)^3
   V.10<-(4/3)*pi*(10*10^(-6)/2)^3
   
-  sum.calculation.conv<-(C.aer.12.conv*DE.1*F.1*V.1)+(C.aer.23.conv*DE.2*F.2*V.2)+(C.aer.36.conv*DE.3*F.3*V.3)+
-    (C.aer.36.conv*DE.4*F.1*V.4)+(C.aer.36.conv*DE.5*F.1*V.5)+(C.aer.610.conv*DE.6*F.6*V.6)+
-    (C.aer.610.conv*DE.7*F.7*V.7)+(C.aer.610.conv*DE.8*F.8*V.8)+(C.aer.610.conv*DE.9*F.9*V.9)+
-    (C.aer.610.conv*DE.10*F.10*V.10)
-    
+  #conventional
+  part1.conv<-(C.aer.1.conv*V.1)+(C.aer.2.conv*V.2)+(C.aer.3.conv*V.3)+
+              (C.aer.4.conv*V.4)+(C.aer.5.conv*V.5)+(C.aer.6.conv*V.6)+
+              (C.aer.7.conv*V.7)+(C.aer.8.conv*V.8)+(C.aer.9.conv*V.9)+
+              (C.aer.10.conv*V.10)
   
-  sum.calculation.eff<-(C.aer.12.eff*DE.1*F.1*V.1)+(C.aer.23.eff*DE.2*F.2*V.2)+(C.aer.36.eff*DE.3*F.3*V.3)+
-    (C.aer.36.eff*DE.4*F.1*V.4)+(C.aer.36.eff*DE.5*F.1*V.5)+(C.aer.610.eff*DE.6*F.6*V.6)+
-    (C.aer.610.eff*DE.7*F.7*V.7)+(C.aer.610.eff*DE.8*F.8*V.8)+(C.aer.610.eff*DE.9*F.9*V.9)+
-    (C.aer.610.eff*DE.10*F.10*V.10)
+  #efficient
+  part1.eff<-(C.aer.1.eff*V.1)+(C.aer.2.eff*V.2)+(C.aer.3.eff*V.3)+
+             (C.aer.4.eff*V.4)+(C.aer.5.eff*V.5)+(C.aer.6.eff*V.6)+
+             (C.aer.7.eff*V.7)+(C.aer.8.eff*V.8)+(C.aer.9.eff*V.9)+
+             (C.aer.10.eff*V.10)
+  
+  part2<-(F.1*DE.1)+(F.2*DE.2)+(F.3*DE.3)+(F.4*DE.4)+(F.5*DE.5)+
+              (F.6*DE.6)+(F.7*DE.7)+(F.8*DE.8)+(F.9*DE.9)+(F.10*DE.10)
   
   
   #Dose (conventional fixture)
-  Dose.fixture.conv<-C.leg*B*t.shower*sum.calculation.conv
+  Dose.fixture.conv<-C.leg*B*t.shower*part1.conv*part2
   
   #Dose (water efficient fixture)
-  Dose.fixture.eff<-C.leg*B*t.shower*sum.calculation.eff
+  Dose.fixture.eff<-C.leg*B*t.shower*part1.eff*part2
   
   #Dose response parameter
   r<-rlnorm(iterations,-2.93,0.49)
@@ -280,11 +298,13 @@ P.infection.eff<-rep(0,iterations)
   
   P.infection.eff<-1-exp(-r*Dose.fixture.eff)
   
-  model.conv<<-data.frame(B=B,C.aer.12.conv,C.aer.23.conv,C.aer.36.conv,C.aer.610.conv,DE.1,
+  model.conv<<-data.frame(B=B,C.aer.1.conv,C.aer.2.conv,C.aer.3.conv,C.aer.4.conv,C.aer.5.conv,
+                          C.aer.6.conv,C.aer.7.conv,C.aer.8.conv,C.aer.9.conv,C.aer.10.conv,DE.1,
                           DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.conv,
                           P.infection.conv)
   
-  model.eff<<-data.frame(B=B,C.aer.12.eff,C.aer.23.eff,C.aer.36.eff,C.aer.610.eff,DE.1,
+  model.eff<<-data.frame(B=B,C.aer.1.eff,C.aer.2.eff,C.aer.3.eff,C.aer.4.eff,C.aer.5.eff,
+                         C.aer.6.eff,C.aer.7.eff,C.aer.8.eff,C.aer.9.eff,C.aer.10.eff,DE.1,
                          DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.eff,
                          P.infection.eff)
   require(ggplot2)
@@ -328,8 +348,9 @@ comparison<-function(iterations,showerduration,C.water){
   
   frameall<<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
   
-  ggplot(data=frameall)+geom_boxplot(aes(x=model,y=infectionrisk.all,colour=showertype))+scale_y_continuous(trans="log10",name="Infection Risk")+
-  scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")
+  windows()
+  ggplot(data=frameall)+geom_violin(aes(x=model,y=infectionrisk.all,colour=showertype),draw_quantiles = c(0.25,0.5,0.75))+scale_y_continuous(trans="log10",name="Infection Risk")+
+  scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")+theme_pubr()
 }
 
 comparison(10000,8,.1)
