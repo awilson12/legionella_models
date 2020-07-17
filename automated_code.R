@@ -24,16 +24,16 @@ ggplot(data=model.simshower)+geom_histogram(aes(x=DD),color="black")+
   scale_x_continuous(name="Deposited Dose")+theme_pubr()
 
 #comparison to vibrating-mesh nebulizer
-schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
-model.vibmesh<-model
+#schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
+#model.vibmesh<-model
 
-ggplot(data=model.vibmesh)+geom_histogram(aes(x=DD),color="black")+
-  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)+
-  scale_x_continuous(name="Deposited Dose")+theme_pubr()
+#ggplot(data=model.vibmesh)+geom_histogram(aes(x=DD),color="black")+
+#  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)+
+#  scale_x_continuous(name="Deposited Dose")+theme_pubr()
 
 #using water conc as start as opposed to air
-schoen.ashbolt.water(10000,C.water=3.3e4,IR=7.5e-3)
-model.shower<-model2
+#schoen.ashbolt.water(10000,C.water=3.3e4,IR=7.5e-3)
+#model.shower<-model2
 
 #-------------hamilton-----------------------------------------
 
