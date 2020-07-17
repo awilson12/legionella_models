@@ -81,7 +81,14 @@ schoen.ashbolt<-function(iterations,C.air,IR){
   
 schoen.ashbolt(10000,C.air=2.9e3,IR=7.5e-3)
 
-ggplot(data=model)+geom_histogram(aes(x=DD))
+ggplot(data=model)+geom_histogram(aes(x=DD),color="black")+
+  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)
+
+schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
+
+ggplot(data=model)+geom_histogram(aes(x=DD),color="black")+
+  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)
+
 
 #--------PART 2 - HAMILTON ET AL. (2019) MODEL----------------------------------------------
 
