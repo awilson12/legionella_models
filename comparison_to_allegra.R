@@ -29,11 +29,6 @@ schoen.ashbolt<-function(iterations,C.air,IR){
   
   #-----------model input parameters--------------------------
   
-  showerduration<-1 
-  
-  #min = best estimate value
-  #max = high value
-  
   #partitioning coefficient
   PC<-runif(iterations,10^-6,1.9e-05)
   #min = low value
@@ -71,16 +66,9 @@ schoen.ashbolt<-function(iterations,C.air,IR){
   F2.610<-(1-F2.15)*0.0125
   
   ###########################################################
-  
-  #concentration of legionella in water (CFU/L)
-  #c.water<-W.water/V.water #I think this equation is only needed if accounting for biofilm
-  
-  DD<-rep(0,iterations)
-  
-  V.air<-IR
 
   #calculating deposited dose
-  DD<-C.air*V.air*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
+  DD<-C.air*IR*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
     
     
   #saving inputs and outputs
