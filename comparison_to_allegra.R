@@ -79,15 +79,6 @@ schoen.ashbolt<-function(iterations,C.air,IR){
     
 }
   
-schoen.ashbolt(10000,C.air=2.9e3,IR=7.5e-3)
-
-ggplot(data=model)+geom_histogram(aes(x=DD),color="black")+
-  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)
-
-schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
-
-ggplot(data=model)+geom_histogram(aes(x=DD),color="black")+
-  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)
 
 
 #--------PART 2 - HAMILTON ET AL. (2019) MODEL----------------------------------------------
@@ -100,7 +91,7 @@ ggplot(data=model)+geom_histogram(aes(x=DD),color="black")+
 # were considered" - equation 2 from paper
   
 
-hamilton<-function(iterations,C.air,IR){
+hamilton<-function(iterations,IR){
   
   
   #model function inputs
@@ -111,22 +102,6 @@ hamilton<-function(iterations,C.air,IR){
 
   #truncnorm dist
   require(truncnorm)
-  
-  showerduration<-1 
-
-  #vectors for loop
-
-  #Dose for conventional fixture
-  Dose.fixture.conv<-rep(0,iterations)
-
-  #Dose for water efficient fixture
-  Dose.fixture.eff<-rep(0,iterations)
-
-  #Breathing rate
-  B<-rep(0,iterations)
-
-  #Exposure time
-  t.shower<-rep(0,iterations)
   
   #CONVENTIONAL
   #concentration of aerosols at diameter 1-2
@@ -216,72 +191,21 @@ hamilton<-function(iterations,C.air,IR){
   part2<-(F.1*DE.1)+(F.2*DE.2)+(F.3*DE.3)+(F.4*DE.4)+(F.5*DE.5)+
               (F.6*DE.6)+(F.7*DE.7)+(F.8*DE.8)+(F.9*DE.9)+(F.10*DE.10)
   
+  C.leg<-3.3e4
   
   #Dose (conventional fixture)
-  Dose.fixture.conv<-C.leg*B*t.shower*part1.conv*part2
+  Dose.fixture.conv<-C.leg*IR*part1.conv*part2
   
   #Dose (water efficient fixture)
-  Dose.fixture.eff<-C.leg*B*t.shower*part1.eff*part2
+  Dose.fixture.eff<-C.leg*IR*part1.eff*part2
   
-  model.conv<<-data.frame(B=B,C.aer.1.conv,C.aer.2.conv,C.aer.3.conv,C.aer.4.conv,C.aer.5.conv,
+  model.conv<<-data.frame(IR=IR,C.aer.1.conv,C.aer.2.conv,C.aer.3.conv,C.aer.4.conv,C.aer.5.conv,
                           C.aer.6.conv,C.aer.7.conv,C.aer.8.conv,C.aer.9.conv,C.aer.10.conv,DE.1,
-                          DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.conv)
+                          DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,Dose.fixture.conv)
   
-  model.eff<<-data.frame(B=B,C.aer.1.eff,C.aer.2.eff,C.aer.3.eff,C.aer.4.eff,C.aer.5.eff,
+  model.eff<<-data.frame(IR=IR,C.aer.1.eff,C.aer.2.eff,C.aer.3.eff,C.aer.4.eff,C.aer.5.eff,
                          C.aer.6.eff,C.aer.7.eff,C.aer.8.eff,C.aer.9.eff,C.aer.10.eff,DE.1,
-                         DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.eff)
-  require(ggplot2)
-  require(ggpubr)
-  require(corrplot)
-  require(gridExtra)
-  require(grid)
-  require(gridGraphics)
+                         DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,Dose.fixture.eff)
   
-  mydata.cor.conv=cor(model.conv,method=c("spearman"))
-  corrplot(mydata.cor.conv,method="number")
-  grid.echo()
-  plot1.conv<-grid.grab()
-  #grid.draw(plot1)
-  
-  mydata.cor.eff=cor(model.eff,method=c("spearman"))
-  corrplot(mydata.cor.eff,method="number")
-  grid.echo()
-  plot1.eff<-grid.grab()
-  
-  combinedinfection<-data.frame(infectionrisk=c(P.infection.eff,P.infection.conv),
-                                type=c(rep("Water Efficient",iterations),rep("Conventional",iterations)))
-  
-    ggplot(data=combinedinfection)+geom_boxplot(aes(y=infectionrisk,x=type,group=type))+
-    scale_y_continuous(trans="log10",name="Infection Risk")+theme_bw()+scale_x_discrete(name="Shower Type")
 
   }
-
-hamilton(10000,8,.1)
-
-#comparison
-
-comparison<-function(iterations,showerduration,C.water){
-  schoen.ashbolt(iterations,showerduration,C.water)
-  hamilton(iterations,showerduration,C.water)
-  
-  infectionrisk.all<-c(model$infection.risk,model.conv$P.infection.conv,model.eff$P.infection.eff)
-  infectionrisk.all<-c(infectionrisk.all,infectionrisk.all)
-  model<-c(rep("Schoen & Ashbolt",iterations),rep("Hamilton",iterations*2),rep("Combined",iterations*3))
-  showertype<-c(rep("conventional or unspecified",iterations*2),rep("water efficient",iterations),rep("combined",iterations*3))
-  
-  frameall<<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
-  
-  windows()
-  ggplot(data=frameall)+geom_violin(aes(x=model,y=infectionrisk.all,colour=showertype),draw_quantiles = c(0.25,0.5,0.75))+scale_y_continuous(trans="log10",name="Infection Risk")+
-  scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")+theme_pubr()
-}
-
-comparison(10000,8,.1)
-
-A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
-B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")
-
-ggarrange(A,B)
-
-ggplot(frameall)+geom_density(aes(x=infection.risk,group=interaction(showertype,model),fill=interaction(showertype,model)),alpha=0.3)+scale_x_continuous(trans="log10")
-
