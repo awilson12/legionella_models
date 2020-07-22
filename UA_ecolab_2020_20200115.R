@@ -124,7 +124,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
     require(gridGraphics)
     
     mydata.cor=cor(model,method=c("spearman"))
-
+    View(mydata.cor)
     corrplot(mydata.cor,method="number")
     grid.echo()
     plot1<-grid.grab()
@@ -246,16 +246,16 @@ P.infection.eff<-rep(0,iterations)
   DE.10<-runif(iterations,0.01,0.06)
   
   #percent aerosolized
-  F.1<-17.50
-  F.2<-16.39
-  F.3<-15.56
-  F.4<-6.67
-  F.5<-3.89
-  F.6<-2.50
-  F.7<-2.78
-  F.8<-5.00
-  F.9<-5.28
-  F.10<-3.89
+  F.1<-.1750
+  F.2<-.1639
+  F.3<-.1556
+  F.4<-.0667
+  F.5<-.0389
+  F.6<-.0250
+  F.7<-.0278
+  F.8<-.0500
+  F.9<-.0528
+  F.10<-.0389
   
   #volume of aerosol for size bin i
   V.1<-(4/3)*pi*(1*10^(-6)/2)^3
@@ -319,11 +319,13 @@ P.infection.eff<-rep(0,iterations)
   grid.echo()
   plot1.conv<-grid.grab()
   #grid.draw(plot1)
+  View(mydata.cor.conv)
   
   mydata.cor.eff=cor(model.eff,method=c("spearman"))
   corrplot(mydata.cor.eff,method="number")
   grid.echo()
   plot1.eff<-grid.grab()
+  View(mydata.cor.eff)
   
   combinedinfection<-data.frame(infectionrisk=c(P.infection.eff,P.infection.conv),
                                 type=c(rep("Water Efficient",iterations),rep("Conventional",iterations)))
