@@ -14,14 +14,31 @@ suppressMessages(suppressWarnings(source("comparison_to_allegra.R")))
 suppressMessages(suppressWarnings(source("schoen_ashbolt_water.R")))
 
 
-#---------- schoen & ashbolt-----------------------------------
 #comparison to simulated shower from Allegra et al.
 schoen.ashbolt(10000,C.air=2.9e3,IR=7.5e-3)
-model.simshower<-model
+model.simshower.ashbolt<-model
+hamilton(10000,C.air=2.9e3,IR=7.5e-3)
+model.simshower.hamilton<-model
 
-ggplot(data=model.simshower)+geom_histogram(aes(x=DD),color="black")+
-  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)+
+Dose<-c(model.simshower.ashbolt$DD,model.simshower.hamilton$DD)
+model<-c(rep("Schoen & Ashbolt",10000),rep("Hamilton et al",10000))
+data<-data.frame(Dose=Dose,model=model)
+
+windows()
+ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),color="black",bins = 50,alpha=0.3)+
+  geom_density(aes(x=Dose,group=model,fill=model),alpha=0.4)+
+  scale_fill_discrete(name="")+
+  scale_y_continuous(name="Density")+
   scale_x_continuous(name="Deposited Dose")+theme_pubr()
+
+windows()
+ggplot(data)+geom_histogram(aes(x=22-Dose,y=..density..,group=model,fill=model),color="black",bins = 50,alpha=0.3)+
+  geom_density(aes(x=22-Dose,group=model,fill=model),alpha=0.4)+
+  scale_fill_discrete(name="")+
+  scale_y_continuous(name="Density")+
+  scale_x_continuous(name="Deposited Dose")+theme_pubr()
+
+
 
 #comparison to vibrating-mesh nebulizer
 #schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
@@ -34,25 +51,3 @@ ggplot(data=model.simshower)+geom_histogram(aes(x=DD),color="black")+
 #using water conc as start as opposed to air
 #schoen.ashbolt.water(10000,C.water=3.3e4,IR=7.5e-3)
 #model.shower<-model2
-
-#-------------hamilton-----------------------------------------
-
-#hamilton with water conc from simulated shower
-hamilton(10000,IR=7.5e-3)
-
-
-#------------comparison-------------------------------------------
-
-#setting up vectors for frame
-DD.all<-c(model.shower$DD,model.conv$Dose.fixture.conv,model.eff$Dose.fixture.eff)
-DD.all<-c(DD.all,DD.all)
-models<-c(rep("Schoen & Ashbolt",10000),rep("Hamilton",10000*2),rep("Combined",10000*3))
-showertype<-c(rep("conventional or unspecified",10000*2),rep("water efficient",10000),rep("combined",10000*3))
-
-#creating frame
-frameall<<-data.frame(Dose=DD.all,model=models,showertype=showertype)
-
-#comparison plot
-windows()
-ggplot(data=frameall)+geom_violin(aes(x=model,y=Dose,colour=showertype),draw_quantiles = c(0.25,0.5,0.75))+scale_y_continuous(name="Dose",trans="log10")+
-  scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")+theme_pubr()
