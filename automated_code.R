@@ -14,15 +14,12 @@ if("ggpubr" %in% rownames(installed.packages())==FALSE){install.packages("ggpubr
 
 suppressMessages(suppressWarnings(source("UA_ecolab_2020_20200115.R")))
 
-
-
-
+suppressMessages(suppressWarnings(source("probability_of_illness estimation.R")))
 
 #-----------------------validation code--------------------------------
 
 suppressMessages(suppressWarnings(source("comparison_to_allegra.R")))
 suppressMessages(suppressWarnings(source("schoen_ashbolt_water.R")))
-
 
 #comparison to simulated shower from Allegra et al.
 schoen.ashbolt(10000,C.air=2.9e3,IR=7.5e-3)
