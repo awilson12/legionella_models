@@ -10,6 +10,16 @@ if("truncdist" %in% rownames(installed.packages())==FALSE){install.packages("tru
 if("ggplot2" %in% rownames(installed.packages())==FALSE){install.packages("ggplot2"); require(ggplot2)}else{require(ggplot2)}
 if("ggpubr" %in% rownames(installed.packages())==FALSE){install.packages("ggpubr"); require(ggpubr)}else{require(ggpubr)}
 
+#----------------------simulation code---------------------------------
+
+suppressMessages(suppressWarnings(source("UA_ecolab_2020_20200115.R")))
+
+
+
+
+
+#-----------------------validation code--------------------------------
+
 suppressMessages(suppressWarnings(source("comparison_to_allegra.R")))
 suppressMessages(suppressWarnings(source("schoen_ashbolt_water.R")))
 
