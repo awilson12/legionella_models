@@ -35,8 +35,16 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #max = best estimate + 10 L/hr
   #ARBITRARY BOUNDS RIGHT NOW
   
-  #inhalation rate (m^3/hr)
-  IR<-runif(iterations,0.72,1.5)
+  #convert to L/min since inhalation rates are in m^3/min
+  FR<-FR/60 # L/hr x 1 hr /60 min = L/min
+  
+  #Breathing rate (m^3/min) (21 years to greater than 81)
+  #used table 6-2 from exposure factors handbook
+  #mean of 1.2e-2 and used 1.7e-2 95th percentile to estimate
+  #SD where SD ~ (95th percentile-mean)/2
+  sd.breathing<-((1.7E-2)-(1.2E-2))/2
+  IR<-rtrunc(iterations,"norm",a=0,mean=1.2E-2,sd=sd.breathing)
+  
   #min = best estimate value
   #max = high value
   
@@ -93,48 +101,48 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   exposure<-rep(0,iterations)
   exposure.char<-rep(0,iterations)
   
-    #convert minutes to hour by dividing by 60
-    exposure<-showerduration/60
+  #in minutes
+  exposure<-showerduration
     
-    #volume of water used in shower  
-    V.water<-FR*exposure
+  #volume of water used in shower  
+  V.water<-FR*exposure
     
-    V.air<-IR*exposure
+  V.air<-IR*exposure
     
-    C.water.converted<-C.water*1000 #convert CFU/mL to CFU/L
+  C.water.converted<-C.water*1000 #convert CFU/mL to CFU/L
     
-    #concentration of legionella in air (CFU/m^3)
-    C.air<-C.water.converted*PC
+  #concentration of legionella in air (CFU/m^3)
+  C.air<-C.water.converted*PC
     
-    #calculating deposited dose
-    DD<-C.air*V.air*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
+  #calculating deposited dose
+  DD<-C.air*V.air*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
     
-    #calculating infection risk
-    infection.risk<-1-exp(-k*(DD))
+  #calculating infection risk
+  infection.risk<-1-exp(-k*(DD))
     
-    #saving inputs and outputs
+  #saving inputs and outputs
     
-    model<<-data.frame(FR=FR,IR=IR,PC=PC,F1.15=F1.15,F2.15=F2.15,F1.56=F1.56,F2.56=F2.56,F1.610=F1.610,
+  model<<-data.frame(FR=FR,IR=IR,PC=PC,F1.15=F1.15,F2.15=F2.15,F1.56=F1.56,F2.56=F2.56,F1.610=F1.610,
                        F2.610=F2.610,k=k,DD=DD,infection.risk=infection.risk)
-    require(ggplot2)
-    require(ggpubr)
-    require(corrplot)
-    require(gridExtra)
-    require(grid)
-    require(gridGraphics)
+  require(ggplot2)
+  require(ggpubr)
+  require(corrplot)
+  require(gridExtra)
+  require(grid)
+  require(gridGraphics)
     
-    mydata.cor=cor(model,method=c("spearman"))
-    View(mydata.cor)
-    corrplot(mydata.cor,method="number")
-    grid.echo()
-    plot1<-grid.grab()
-    #grid.draw(plot1)
+  mydata.cor=cor(model,method=c("spearman"))
+  View(mydata.cor)
+  corrplot(mydata.cor,method="number")
+  grid.echo()
+  plot1<-grid.grab()
+  #grid.draw(plot1)
     
-    plot2<-ggplot(data=model)+geom_boxplot(aes(y=infection.risk))+ggtitle("Infection Risk")+
-      scale_y_continuous(trans="log10")+theme_bw()
+  plot2<-ggplot(data=model)+geom_boxplot(aes(y=infection.risk))+ggtitle("Infection Risk")+
+  scale_y_continuous(trans="log10")+theme_bw()
     
-    windows()
-    grid.arrange(plot1,plot2,nrow=1,ncol=2)
+  windows()
+  grid.arrange(plot1,plot2,nrow=1,ncol=2)
     
   }
   
@@ -161,34 +169,38 @@ hamilton<-function(iterations,showerduration,C.water){
   #3-C.water (concentration of L. pneumophila in water - CFU/mL)
 
 
-#truncnorm dist
-require(truncnorm)
+  #truncnorm dist
+  require(truncnorm)
 
-#vectors for loop
+  #vectors for loop
 
-#Dose for conventional fixture
-Dose.fixture.conv<-rep(0,iterations)
+  #Dose for conventional fixture
+  Dose.fixture.conv<-rep(0,iterations)
 
-#Dose for water efficient fixture
-Dose.fixture.eff<-rep(0,iterations)
+  #Dose for water efficient fixture
+  Dose.fixture.eff<-rep(0,iterations)
 
-#Breathing rate
-B<-rep(0,iterations)
+  #Breathing rate
+  B<-rep(0,iterations)
 
-#Exposure time
-t.shower<-rep(0,iterations)
+  #Exposure time
+  t.shower<-rep(0,iterations)
 
-#Concentration of legionella in water
-C.leg<-rep(0,iterations)
+  #Concentration of legionella in water
+  C.leg<-rep(0,iterations)
 
-#Probability of infection - conventional fixture
-P.infection.conv<-rep(0,iterations)
+  #Probability of infection - conventional fixture
+  P.infection.conv<-rep(0,iterations)
 
-#Probability of infection water efficient fixture
-P.infection.eff<-rep(0,iterations)
+  #Probability of infection water efficient fixture
+  P.infection.eff<-rep(0,iterations)
 
-  #Breathing rate (m^3/min)
-  B<-runif(iterations,0.013,0.017)
+  #Breathing rate (m^3/min) (21 years to greater than 81)
+  #used table 6-2 from exposure factors handbook
+  #mean of 1.2e-2 and used 1.7e-2 95th percentile to estimate
+  #SD where SD ~ (95th percentile-mean)/2
+  sd.breathing<-((1.7E-2)-(1.2E-2))/2
+  B<-rtrunc(iterations,"norm",a=0,mean=1.2E-2,sd=sd.breathing)
   
   #Exposure duration (min)
   t.shower<-showerduration
