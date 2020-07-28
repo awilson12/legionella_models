@@ -70,9 +70,10 @@ frame.plot$group<-factor(frame.plot$group,levels=groups)
 windows()
 ggplot(frame.plot)+geom_tile(aes(x=model,y=group,fill=log10(illness)))+
   geom_text(aes(label=signif(illness,2),x=model,y=group),size=7)+
-  scale_fill_gradient2(low="#33CC33",high="#FF0000",mid="#FFCC00",midpoint=median(log10(frame.plot$illness)),name=expression("Log"[10]*phantom(x)*"Illness Risk"))+
+  scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",midpoint=median(log10(frame.plot$illness)),name=expression("Log"[10]*phantom(x)*"Illness Risk"))+
   scale_x_discrete(name="")+
   scale_y_discrete(name="")+
+  theme_bw()+
   theme(axis.text.x=element_text(size=16),
         axis.text.y=element_text(size=16),
         legend.title=element_text(size=14),

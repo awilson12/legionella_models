@@ -132,17 +132,31 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   require(gridGraphics)
     
   mydata.cor=cor(model,method=c("spearman"))
-  View(mydata.cor)
-  corrplot(mydata.cor,method="number")
-  grid.echo()
-  plot1<-grid.grab()
-  #grid.draw(plot1)
-    
-  plot2<-ggplot(data=model)+geom_boxplot(aes(y=infection.risk))+ggtitle("Infection Risk")+
-  scale_y_continuous(trans="log10")+theme_bw()
-    
-  windows()
-  grid.arrange(plot1,plot2,nrow=1,ncol=2)
+  spearman.cor<-mydata.cor[,12]
+  inputvar<-c("FR","IR","PC","F1.15","F2.15","F1.56","F2.56","F1.610","F2.610",
+              "k","DD","Infection Risk")
+  outputvar<-"Infection Risk"
+  
+  frame.schoen<-data.frame(spearman.cor=spearman.cor,inputvar=inputvar,outputvar=outputvar)
+  frame.schoen<-frame.schoen[frame.schoen$inputvar!="Infection Risk",]
+  
+  
+  frame.schoen$inputvar<-factor(frame.schoen$inputvar,levels=inputvar)
+  
+  plotA<<-ggplot(frame.schoen)+geom_tile(aes(x=outputvar,y=inputvar,fill=spearman.cor))+
+    geom_text(aes(label=signif(spearman.cor,2),x=outputvar,y=inputvar),size=7)+
+    scale_fill_gradient2(low="99CCCC",mid="white",high="#6666FF",name="",midpoint=0)+
+    theme_bw()+
+    theme(axis.text.x=element_text(size=16),
+          axis.text.y=element_text(size=16),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=14),
+          legend.position = "top",
+          legend.key.width = unit(1, "cm"),
+          plot.title = element_text(hjust = 0.5,size=16))+
+    scale_x_discrete(name="")+
+    scale_y_discrete(name="")+
+    ggtitle("Schoen & Ashbolt")
     
   }
   
@@ -327,17 +341,57 @@ hamilton<-function(iterations,showerduration,C.water){
   require(gridGraphics)
   
   mydata.cor.conv=cor(model.conv,method=c("spearman"))
-  corrplot(mydata.cor.conv,method="number")
-  grid.echo()
-  plot1.conv<-grid.grab()
-  #grid.draw(plot1)
-  View(mydata.cor.conv)
+  spearman.conv<-mydata.cor.conv[,24]
+  inputvar<-c("B","C.aer.1.conv","C.aer.2.conv","C.aer.3.conv","C.aer.4.conv","C.aer.5.conv",
+              "C.aer.6.conv","C.aer.7.conv","C.aer.8.conv","C.aer.9.conv","C.aer.10.conv","DE.1",
+              "DE.2","DE.3","DE.4","DE.5","DE.6","DE.7","DE.8","DE.9","DE.10","r","Dose.fixture.conv",
+              "P.infect.conv")
+  outputvar<-"Infection Risk"
+  
+  frame.conv<-data.frame(spearman.conv=spearman.conv,inputvar=inputvar,outputvar=outputvar)
+  frame.conv<-frame.conv[frame.conv$inputvar!="P.infect.conv",]
+  
+  plotB<<-ggplot(frame.conv)+geom_tile(aes(x=outputvar,y=inputvar,fill=spearman.conv))+
+    geom_text(aes(label=signif(spearman.conv,2),x=outputvar,y=inputvar),size=7)+
+    scale_fill_gradient2(low="99CCCC",mid="white",high="#6666FF",name="",midpoint=0)+
+    theme_bw()+
+    theme(axis.text.x=element_text(size=16),
+        axis.text.y=element_text(size=16),
+        legend.title=element_text(size=14),
+        legend.text=element_text(size=14),
+        legend.position = "top",
+        legend.key.width = unit(1, "cm"),
+        plot.title = element_text(hjust = 0.5,size=16))+
+    scale_x_discrete(name="")+
+    scale_y_discrete(name="")+ggtitle("Hamilton et al. Conventional")
+  
   
   mydata.cor.eff=cor(model.eff,method=c("spearman"))
-  corrplot(mydata.cor.eff,method="number")
-  grid.echo()
-  plot1.eff<-grid.grab()
-  View(mydata.cor.eff)
+  spearman.eff<-mydata.cor.eff[,24]
+  inputvar<-c("B","C.aer.1.eff","C.aer.2.eff","C.aer.3.eff","C.aer.4.eff","C.aer.5.eff",
+              "C.aer.6.eff","C.aer.7.eff","C.aer.8.eff","C.aer.9.eff","C.aer.10.eff","DE.1",
+              "DE.2","DE.3","DE.4","DE.5","DE.6","DE.7","DE.8","DE.9","DE.10","r","Dose.fixture.eff",
+              "P.infect.eff")
+  outputvar<-"Infection Risk"
+  
+  frame.conv<-data.frame(spearman.eff=spearman.eff,inputvar=inputvar,outputvar=outputvar)
+  frame.conv<-frame.conv[frame.conv$inputvar!="P.infect.eff",]
+  
+  plotC<<-ggplot(frame.conv)+geom_tile(aes(x=outputvar,y=inputvar,fill=spearman.eff))+
+    geom_text(aes(label=signif(spearman.eff,2),x=outputvar,y=inputvar),size=7)+
+    scale_fill_gradient2(low="99CCCC",mid="white",high="#6666FF",name="",midpoint=0)+
+    theme_bw()+
+    theme(axis.text.x=element_text(size=16),
+          axis.text.y=element_text(size=16),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=14),
+          legend.position = "top",
+          legend.key.width = unit(1, "cm"),
+          plot.title = element_text(hjust = 0.5,size=16))+
+    scale_x_discrete(name="")+
+    scale_y_discrete(name="")+ggtitle("Hamilton et al. Water Efficient")
+  
+  
   
   combinedinfection<-data.frame(infectionrisk=c(P.infection.eff,P.infection.conv),
                                 type=c(rep("Water Efficient",iterations),rep("Conventional",iterations)))
@@ -377,6 +431,9 @@ ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(
   theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
         strip.text = element_text(size=16),legend.text = element_text(size=16))+
   guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
+
+windows()
+ggarrange(plotA,plotB,plotC,common.legend=TRUE,ncol=3,legend="right")
 
 #A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
 #B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")

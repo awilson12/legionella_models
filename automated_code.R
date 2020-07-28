@@ -34,27 +34,6 @@ data<-data.frame(Dose=Dose,model=model)
 windows()
 ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),color="black",bins = 50,alpha=0.3)+
   geom_density(aes(x=Dose,group=model,fill=model),alpha=0.4)+
-  scale_fill_discrete(name="")+
+  scale_fill_manual(name="",values=c("#0066CC","#3300CC"))+
   scale_y_continuous(name="Density")+
   scale_x_continuous(name="Deposited Dose")+theme_pubr()
-
-windows()
-ggplot(data)+geom_histogram(aes(x=22-Dose,y=..density..,group=model,fill=model),color="black",bins = 50,alpha=0.3)+
-  geom_density(aes(x=22-Dose,group=model,fill=model),alpha=0.4)+
-  scale_fill_discrete(name="")+
-  scale_y_continuous(name="Density")+
-  scale_x_continuous(name="Deposited Dose")+theme_pubr()
-
-
-
-#comparison to vibrating-mesh nebulizer
-#schoen.ashbolt(10000,C.air=8.9e3,IR=7.5e-3)
-#model.vibmesh<-model
-
-#ggplot(data=model.vibmesh)+geom_histogram(aes(x=DD),color="black")+
-#  geom_vline(xintercept=22,linetype="dashed",colour="red",size=1)+
-#  scale_x_continuous(name="Deposited Dose")+theme_pubr()
-
-#using water conc as start as opposed to air
-#schoen.ashbolt.water(10000,C.water=3.3e4,IR=7.5e-3)
-#model.shower<-model2
