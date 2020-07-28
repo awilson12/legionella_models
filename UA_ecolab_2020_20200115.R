@@ -362,17 +362,26 @@ comparison<-function(iterations,showerduration,C.water){
   
   frameall<<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
   
-  windows()
-  ggplot(data=frameall)+geom_violin(aes(x=model,y=infectionrisk.all,colour=showertype),draw_quantiles = c(0.25,0.5,0.75))+scale_y_continuous(trans="log10",name="Infection Risk")+
-  scale_x_discrete(name="Model Source")+scale_colour_discrete(name="Shower Type")+theme_pubr()
 }
 
 comparison(10000,8,.1)
 
-A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
-B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")
+windows()
+frameall<-frameall[frameall$model!="Combined",]
+ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
+  scale_x_discrete(name="Model Source")+
+  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
+  stat_summary(fun = median, fun.min = median, fun.max = median,
+               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
+  theme_pubr()+
+  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
+        strip.text = element_text(size=16),legend.text = element_text(size=16))+
+  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
 
-ggarrange(A,B)
+#A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
+#B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")
 
-ggplot(frameall)+geom_density(aes(x=infection.risk,group=interaction(showertype,model),fill=interaction(showertype,model)),alpha=0.3)+scale_x_continuous(trans="log10")
+#ggarrange(A,B)
+
+#ggplot(frameall)+geom_density(aes(x=infection.risk,group=interaction(showertype,model),fill=interaction(showertype,model)),alpha=0.3)+scale_x_continuous(trans="log10")
 
