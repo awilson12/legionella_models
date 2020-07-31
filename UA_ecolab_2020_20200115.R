@@ -25,12 +25,12 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #model function inputs
         #1-iterations
         #2-shower duration (minutes)
-        #3-C.water (concentration of L. pneumophila in water - CFU/mL)
+        #3-C.water (concentration of L. pneumophila in water - CFU/L)
   
   #-----------model input parameters--------------------------
   
   #flow rate (L/hr)
-  FR<-runif(iterations,350,370)
+  FR<-rtriangle(iterations,a=350,b=370,c=360)
   #min = best estimate - 10 L/hr
   #max = best estimate + 10 L/hr
   #ARBITRARY BOUNDS RIGHT NOW
@@ -49,7 +49,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #max = high value
   
   #partitioning coefficient
-  PC<-runif(iterations,10^-6,1.9e-05)
+  PC<-rtriangle(iterations,a=10E-6,c=10E-5,b=19E-5)
   #min = low value
   #max = (Best estimate value - low value) + Best estimate value
   
@@ -58,12 +58,14 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #----------aerosol size 1 - 5 um--------------
   
   #fraction of total aerosolized organisms in aeorosol size 1-5
-  F1.15<-runif(iterations,0.75,1)
+  #fraction of total aerosolized organisms in aeorosol size 1-5
+  F1.15<-rtriangle(iterations,a=0.5,c=0.75,b=1)
   #min = best estimate value
   #max = high value
   
   #fraction of total aerosols of size range 1-5um deposited at the alveoli
-  F2.15<-runif(iterations,0.2,0.54)
+  F2.15<-rtriangle(iterations,a=0,c=0.2,b=0.54)
+  
   #min = best estimate value
   #max = high value
   
@@ -108,11 +110,9 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   V.water<-FR*exposure
     
   V.air<-IR*exposure
-    
-  C.water.converted<-C.water*1000 #convert CFU/mL to CFU/L
-    
+
   #concentration of legionella in air (CFU/m^3)
-  C.air<-C.water.converted*PC
+  C.air<-C.water*PC
     
   #calculating deposited dose
   DD<-C.air*V.air*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
@@ -161,7 +161,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   }
   
 
-schoen.ashbolt(10000,8,.1)
+schoen.ashbolt(10000,8,100)
 
 
 #--------PART 2 - HAMILTON ET AL. (2019) MODEL----------------------------------------------
@@ -220,7 +220,7 @@ hamilton<-function(iterations,showerduration,C.water){
   t.shower<-showerduration
   
   #Legionella concentration
-  C.leg<-C.water*1000
+  C.leg<-C.water*1000 #convert CFU/L to CFU/m^3
   
   #CONVENTIONAL
   #concentration of aerosols at diameter 1-2
@@ -271,7 +271,7 @@ hamilton<-function(iterations,showerduration,C.water){
   DE.9<-runif(iterations,0.01,0.12)
   DE.10<-runif(iterations,0.01,0.06)
   
-  #percent aerosolized
+  #fraction aerosolized
   F.1<-.1750
   F.2<-.1639
   F.3<-.1556
@@ -401,7 +401,7 @@ hamilton<-function(iterations,showerduration,C.water){
 
   }
 
-hamilton(10000,8,.1)
+hamilton(10000,8,100)
 
 #comparison
 
@@ -418,22 +418,84 @@ comparison<-function(iterations,showerduration,C.water){
   
 }
 
-comparison(10000,8,.1)
+concentrations<-c(1E0,1E1,1E2,1E3,1E4,1E5,1E6,1E7)
+
+mean.schoen<-rep(NA,length(concentrations))
+sd.schoen<-rep(NA,length(concentrations))
+
+mean.ham.eff<-rep(NA,length(concentrations))
+sd.ham.eff<-rep(NA,length(concentrations))
+
+mean.ham.conv<-rep(NA,length(concentrations))
+sd.ham.conv<-rep(NA,length(concentrations))
+
+for (i in 1:length(concentrations)){
+  comparison(1000,7.8,concentrations[i])
+  
+  if (i==1){
+    frame.total<-frameall
+    frame.total$conc<-concentrations[i]
+  }else{
+    frameall$conc<-concentrations[i]
+    frame.total<-rbind(frame.total,frameall)
+  }
+  
+  mean.schoen[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Schoen & Ashbolt"])
+  sd.schoen[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Schoen & Ashbolt"])
+  
+  mean.ham.eff[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="water efficient"])
+  sd.ham.eff[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="water efficient"])
+  
+  mean.ham.conv[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="water efficient"])
+  sd.ham.conv[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="water efficient"])
+  
+}
+
+mean<-c(mean.schoen,mean.ham.eff,mean.ham.conv)
+sd<-c(sd.schoen,sd.ham.eff,sd.ham.conv)
+model<-c(rep("Schoen & Ashbolt",length(mean.schoen)),rep("Hamilton",length(c(mean.ham.eff,mean.ham.conv))))
+type<-c(rep("Unspecified",length(mean.schoen)),rep("Water Efficient",length(mean.ham.eff)),rep("Conventional",length(mean.ham.conv)))
+conc<-rep(concentrations,3)
+frame.conc.compare<-data.frame(mean=mean,sd=sd,model=model,type=type,conc=conc)
 
 windows()
-frameall<-frameall[frameall$model!="Combined",]
-ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
-  scale_x_discrete(name="Model Source")+
-  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
-  stat_summary(fun = median, fun.min = median, fun.max = median,
-               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
-  theme_pubr()+
-  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
-        strip.text = element_text(size=16),legend.text = element_text(size=16))+
-  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
+ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(type,model),linetype=model,color=type),size=1.5)+
+  geom_point(aes(x=conc/1000,y=mean,group=interaction(type,model),color=type),size=6)+
+  #geom_ribbon(aes(x=conc/1000,ymax=mean+1.962*sd/sqrt(1000),ymin=mean-sd*1.962/sqrt(1000),group=interaction(type,model),fill=type),alpha=0.8)+
+  geom_errorbar(aes(x=conc/1000,ymin=mean-sd,ymax=mean+sd,group=interaction(type,model),color=type),size=1,width=.2)+
+  scale_y_continuous(trans="log10",name="Infection Risk",breaks=10^seq(-8,0,1),
+                     labels=c("1/100,000,000","1/10,000,000","1/1,000,000","1/100,000","1/10,000","1/1,000","1/100","1/10","1"))+
+  scale_x_continuous(trans="log10",name="CFU/mL",
+                     labels=c("0.001","0.01","0.1","1","10","100","1,000","10,000"),breaks=10^seq(-3,4,1))+
+  scale_color_discrete(name="Shower Type")+
+  scale_linetype_discrete(name="Model")+
+  geom_hline(yintercept=1/10000,linetype="dotted",color="black",size=2)+
+  annotate("text",label=c("1/10,000 Risk Threshold"),x=1e3,y=2e-04,size=5)+
+  theme_bw()+
+  theme(axis.title = element_text(size=18),axis.text=element_text(size=18),
+        legend.title=element_text(size=18),legend.text=element_text(size=18),
+        legend.box="vertical",legend.position="top")
 
-windows()
-ggarrange(plotA,plotB,plotC,common.legend=TRUE,ncol=3,legend="right")
+
+
+
+
+#--------------------- previous plotting -----------------------------------
+
+#windows()
+#frameall<-frameall[frameall$model!="Combined",]
+#ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
+#  scale_x_discrete(name="Model Source")+
+#  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
+#  stat_summary(fun = median, fun.min = median, fun.max = median,
+#               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
+#  theme_pubr()+
+#  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
+#        strip.text = element_text(size=16),legend.text = element_text(size=16))+
+#  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
+
+#windows()
+#ggarrange(plotA,plotB,plotC,common.legend=TRUE,ncol=3,legend="right")
 
 #A<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=model,fill=model),alpha=0.3)+scale_x_continuous(trans="log10")
 #B<-ggplot(frameall)+geom_density(aes(x=infection.risk,group=showertype,fill=showertype),alpha=0.3)+scale_x_continuous(trans="log10")
