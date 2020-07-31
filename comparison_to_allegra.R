@@ -27,12 +27,13 @@ schoen.ashbolt<-function(iterations,C.air,IR){
   #----------aerosol size 1 - 5 um--------------
   
   #fraction of total aerosolized organisms in aeorosol size 1-5
-  F1.15<-runif(iterations,0.75,1)
+  F1.15<-rtriangle(iterations,a=0.5,c=0.75,b=1)
   #min = best estimate value
   #max = high value
   
   #fraction of total aerosols of size range 1-5um deposited at the alveoli
-  F2.15<-runif(iterations,0.2,0.54)
+  F2.15<-rtriangle(iterations,a=0,c=0.2,b=0.54)
+  
   #min = best estimate value
   #max = high value
   
