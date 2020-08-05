@@ -477,22 +477,21 @@ ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(ty
         legend.box="vertical",legend.position="top")
 
 
+windows()
+frameall<-frameall[frameall$model!="Combined",]
+ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
+  scale_x_discrete(name="Model Source")+
+  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
+  stat_summary(fun = median, fun.min = median, fun.max = median,
+               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
+  theme_pubr()+
+  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
+        strip.text = element_text(size=16),legend.text = element_text(size=16))+
+  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
 
 
 
 #--------------------- previous plotting -----------------------------------
-
-#windows()
-#frameall<-frameall[frameall$model!="Combined",]
-#ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
-#  scale_x_discrete(name="Model Source")+
-#  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
-#  stat_summary(fun = median, fun.min = median, fun.max = median,
-#               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
-#  theme_pubr()+
-#  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
-#        strip.text = element_text(size=16),legend.text = element_text(size=16))+
-#  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
 
 #windows()
 #ggarrange(plotA,plotB,plotC,common.legend=TRUE,ncol=3,legend="right")
