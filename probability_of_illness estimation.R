@@ -32,9 +32,9 @@ IRgroups<-c(IR.age.20.29,IR.age.30.39,IR.age.40.49,IR.age.50.59,IR.age.60.69,IR.
 
 mean.infect.schoen.ashbolt<-mean(frameall$infection.risk[frameall$model=="Schoen & Ashbolt"])
 
-mean.infect.hamilton.conv<-mean(frameall$infection.risk[frameall$model=="Hamilton" & frameall$showertype=="conventional or unspecified"])
+mean.infect.hamilton.conv<-mean(frameall$infection.risk[frameall$model=="Hamilton" & frameall$showertype=="Conventional"])
 
-mean.infect.hamilton.eff<-mean(frameall$infection.risk[frameall$model=="Hamilton" & frameall$showertype=="water efficient"])
+mean.infect.hamilton.eff<-mean(frameall$infection.risk[frameall$model=="Hamilton" & frameall$showertype=="Water Efficient"])
 
 infect<-c(mean.infect.schoen.ashbolt,mean.infect.hamilton.conv,mean.infect.hamilton.eff)
 

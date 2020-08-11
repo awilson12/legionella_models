@@ -151,8 +151,8 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
           axis.text.y=element_text(size=16),
           legend.title=element_text(size=14),
           legend.text=element_text(size=14),
-          legend.position = "top",
           legend.key.width = unit(1, "cm"),
+          legend.position="none",
           plot.title = element_text(hjust = 0.5,size=16))+
     scale_x_discrete(name="")+
     scale_y_discrete(name="")+
@@ -359,9 +359,9 @@ hamilton<-function(iterations,showerduration,C.water){
         axis.text.y=element_text(size=16),
         legend.title=element_text(size=14),
         legend.text=element_text(size=14),
-        legend.position = "top",
         legend.key.width = unit(1, "cm"),
-        plot.title = element_text(hjust = 0.5,size=16))+
+        plot.title = element_text(hjust = 0.5,size=16),
+        legend.position = "none")+
     scale_x_discrete(name="")+
     scale_y_discrete(name="")+ggtitle("Hamilton et al. Conventional")
   
@@ -385,9 +385,9 @@ hamilton<-function(iterations,showerduration,C.water){
           axis.text.y=element_text(size=16),
           legend.title=element_text(size=14),
           legend.text=element_text(size=14),
-          legend.position = "top",
           legend.key.width = unit(1, "cm"),
-          plot.title = element_text(hjust = 0.5,size=16))+
+          plot.title = element_text(hjust = 0.5,size=16),
+          legend.position="none")+
     scale_x_discrete(name="")+
     scale_y_discrete(name="")+ggtitle("Hamilton et al. Water Efficient")
   
@@ -412,11 +412,30 @@ comparison<-function(iterations,showerduration,C.water){
   infectionrisk.all<-c(model$infection.risk,model.conv$P.infection.conv,model.eff$P.infection.eff)
   infectionrisk.all<-c(infectionrisk.all,infectionrisk.all)
   model<-c(rep("Schoen & Ashbolt",iterations),rep("Hamilton",iterations*2),rep("Combined",iterations*3))
-  showertype<-c(rep("conventional or unspecified",iterations*2),rep("water efficient",iterations),rep("combined",iterations*3))
+  showertype<-c(rep("Unspecified",iterations),rep("Conventional",iterations),rep("Water Efficient",iterations),rep("combined",iterations*3))
   
   frameall<<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
   
 }
+
+comparison(10000,7.8,100)
+
+
+windows()
+frameall<-frameall[frameall$model!="Combined",]
+
+frameall$showertype <- factor(frameall$showertype, levels = c("Conventional","Water Efficient","Unspecified"))
+ggplot(data=frameall,aes(x=showertype,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
+  scale_x_discrete(name="")+
+  scale_colour_manual(values=c("#0066CC","#99CCFF","light blue"),name="")+
+  stat_summary(fun = median, fun.min = median, fun.max = median,
+               geom = "crossbar", width = 0.2,colour="black",position=position_dodge(width=0.9))+
+  theme_pubr()+
+  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
+        strip.text = element_text(size=16),legend.text = element_text(size=16))+
+  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
+
+
 
 concentrations<-c(1E0,1E1,1E2,1E3,1E4,1E5,1E6,1E7)
 
@@ -443,11 +462,11 @@ for (i in 1:length(concentrations)){
   mean.schoen[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Schoen & Ashbolt"])
   sd.schoen[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Schoen & Ashbolt"])
   
-  mean.ham.eff[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="water efficient"])
-  sd.ham.eff[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="water efficient"])
+  mean.ham.eff[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="Water Efficient"])
+  sd.ham.eff[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="Water Efficient"])
   
-  mean.ham.conv[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="water efficient"])
-  sd.ham.conv[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="water efficient"])
+  mean.ham.conv[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="Water Efficient"])
+  sd.ham.conv[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="Water Efficient"])
   
 }
 
@@ -458,6 +477,9 @@ type<-c(rep("Unspecified",length(mean.schoen)),rep("Water Efficient",length(mean
 conc<-rep(concentrations,3)
 frame.conc.compare<-data.frame(mean=mean,sd=sd,model=model,type=type,conc=conc)
 
+frame.conc.compare$type <- factor(frame.conc.compare$type, levels = c("Conventional","Water Efficient","Unspecified"))
+
+
 windows()
 ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(type,model),linetype=model,color=type),size=1.5)+
   geom_point(aes(x=conc/1000,y=mean,group=interaction(type,model),color=type),size=6)+
@@ -467,7 +489,7 @@ ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(ty
                      labels=c("1/100,000,000","1/10,000,000","1/1,000,000","1/100,000","1/10,000","1/1,000","1/100","1/10","1"))+
   scale_x_continuous(trans="log10",name="CFU/mL",
                      labels=c("0.001","0.01","0.1","1","10","100","1,000","10,000"),breaks=10^seq(-3,4,1))+
-  scale_color_discrete(name="Shower Type")+
+  scale_colour_manual(values=c("#0066CC","#99CCFF","light blue"),name="Shower Type")+
   scale_linetype_discrete(name="Model")+
   geom_hline(yintercept=1/10000,linetype="dotted",color="black",size=2)+
   annotate("text",label=c("1/10,000 Risk Threshold"),x=1e3,y=2e-04,size=5)+
@@ -476,20 +498,8 @@ ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(ty
         legend.title=element_text(size=18),legend.text=element_text(size=18),
         legend.box="vertical",legend.position="top")
 
-
 windows()
-frameall<-frameall[frameall$model!="Combined",]
-ggplot(data=frameall,aes(x=model,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
-  scale_x_discrete(name="Model Source")+
-  scale_colour_manual(values=c("#0066CC","#99CCFF"),name="")+
-  stat_summary(fun = median, fun.min = median, fun.max = median,
-               geom = "crossbar", width = 0.5,colour="black",position=position_dodge(width=0.75))+
-  theme_pubr()+
-  theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
-        strip.text = element_text(size=16),legend.text = element_text(size=16))+
-  guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
-
-
+ggarrange(plotA,plotB,plotC,nrow=1)
 
 #--------------------- previous plotting -----------------------------------
 
