@@ -15,6 +15,8 @@ if("triangle" %in% rownames(installed.packages())==FALSE){install.packages("tria
 
 suppressMessages(suppressWarnings(source("UA_ecolab_2020_20200115.R")))
 
+
+comparison(10000,7.8,100)
 suppressMessages(suppressWarnings(source("probability_of_illness estimation.R")))
 
 #-----------------------validation code--------------------------------
