@@ -83,7 +83,7 @@ server <- function(input, output) {
     ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=type,color=type),size=1.5)+
       geom_point(aes(x=conc/1000,y=mean,group=type,color=type),size=6)+
       geom_errorbar(aes(x=conc/1000,ymin=mean-sd,ymax=mean+sd,group=type,color=type),size=1,width=.2)+
-      geom_point(data=frame.run,aes(C.water/1000,y=mean),fill="red",size=7,shape=23)+
+      geom_point(data=frame.run,aes(C.water,y=mean),fill="red",size=7,shape=23)+
       scale_y_continuous(trans="log10",name="Infection Risk",breaks=10^seq(-8,0,1),
                          labels=c("1/100,000,000","1/10,000,000","1/1,000,000","1/100,000","1/10,000","1/1,000","1/100","1/10","1"))+
       scale_x_continuous(trans="log10",name="CFU/mL",

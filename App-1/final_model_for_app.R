@@ -42,7 +42,7 @@ hamilton<-function(showerduration,C.water,type="conventional"){
   t.shower<-showerduration
   
   #Legionella concentration
-  C.leg<-C.water*1000 #convert CFU/L to CFU/m^3
+  C.leg<-C.water*1000*1000 #convert CFU/mL to CFU/L and then CFU/m^3
   
   #CONVENTIONAL
   #concentration of aerosols at diameter 1-2
