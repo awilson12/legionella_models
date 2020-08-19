@@ -13,7 +13,7 @@ ui <- fluidPage(
       
       
       sliderInput(inputId = "C.water",
-                  label = "Log10 Concentration (CFU/mL)",
+                  label = "Log10 CFU/mL",
                   min = -3,
                   max = 8,
                   value=1),
@@ -22,7 +22,12 @@ ui <- fluidPage(
                   min = 1,
                   max = 30,
                   value = 30),
-      
+      selectInput(inputId = "threshold",
+                  label = "Risk Threshold",
+                  choices=c("1/1,000",
+                            "1,10,000",
+                            "1/100,000",
+                            "1/1,000,000")),
       selectInput(inputId = "type",
                   label = "Shower Type",
                   choices=c("Conventional","Water Efficient")),
@@ -80,16 +85,35 @@ server <- function(input, output) {
     source("final_model_for_app.R")
     hamilton(showerduration=input$showerduration,C.water=10^input$C.water,type=type)
     frame.conc.compare<-read.csv('C:/Users/wilso/Documents/legionella_models/App-1/frame.conc.compare.csv')
+    
+    if(input$threshold=="1/1,000"){
+      threshold=1/1000
+    }else if (input$threshold=="1/10,000"){
+      threshold=1/10000
+    }else if (input$threshold=="1/100,000"){
+      threshold=1/100000
+    }else{
+      threshold=1/1000000
+    }
+    
+    if(frame.run$mean>threshold){
+      choice<-"red"
+    }else{
+      choice<-"green"
+    }
+    
+    
+    
     ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=type,color=type),size=1.5)+
       geom_point(aes(x=conc/1000,y=mean,group=type,color=type),size=6)+
       geom_errorbar(aes(x=conc/1000,ymin=mean-sd,ymax=mean+sd,group=type,color=type),size=1,width=.2)+
-      geom_point(data=frame.run,aes(C.water,y=mean),fill="red",size=7,shape=23)+
+      geom_point(data=frame.run,aes(C.water,y=mean),fill=choice,size=7,shape=23)+
       scale_y_continuous(trans="log10",name="Infection Risk",breaks=10^seq(-8,0,1),
                          labels=c("1/100,000,000","1/10,000,000","1/1,000,000","1/100,000","1/10,000","1/1,000","1/100","1/10","1"))+
       scale_x_continuous(trans="log10",name="CFU/mL",
                          labels=c("0.001","0.01","0.1","1","10","100","1,000","10,000"),breaks=10^seq(-3,4,1))+
       scale_colour_manual(values=c("#0066CC","#99CCFF","light blue"),name="Shower Type")+
-      geom_hline(yintercept=1/10000,linetype="dotted",color="black",size=2)+
+      geom_hline(yintercept=threshold,linetype="dotted",color="black",size=2)+
       annotate("text",label=c("1/10,000 Risk Threshold"),x=1e3,y=2e-04,size=5)+
       theme_bw()+
       theme(axis.title = element_text(size=18),axis.text=element_text(size=18),
