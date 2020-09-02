@@ -23,9 +23,9 @@
 schoen.ashbolt<-function(iterations,showerduration,C.water){
   
   #model function inputs
-        #1-iterations
-        #2-shower duration (minutes)
-        #3-C.water (concentration of L. pneumophila in water - CFU/L)
+  #1-iterations
+  #2-shower duration (minutes)
+  #3-C.water (concentration of L. pneumophila in water - CFU/L)
   
   #-----------model input parameters--------------------------
   
@@ -105,32 +105,32 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   
   #in minutes
   exposure<-showerduration
-    
+  
   #volume of water used in shower  
   V.water<-FR*exposure
-    
+  
   V.air<-IR*exposure
-
+  
   #concentration of legionella in air (CFU/m^3)
   C.air<-C.water*PC
-    
+  
   #calculating deposited dose
   DD<-C.air*V.air*((F1.15*F2.15)+(F1.56*F2.56)+(F1.610*F2.610))
-    
+  
   #calculating infection risk
   infection.risk<-1-exp(-k*(DD))
-    
+  
   #saving inputs and outputs
-    
+  
   model<<-data.frame(FR=FR,IR=IR,PC=PC,F1.15=F1.15,F2.15=F2.15,F1.56=F1.56,F2.56=F2.56,F1.610=F1.610,
-                       F2.610=F2.610,k=k,DD=DD,infection.risk=infection.risk)
+                     F2.610=F2.610,k=k,DD=DD,infection.risk=infection.risk)
   require(ggplot2)
   require(ggpubr)
   require(corrplot)
   require(gridExtra)
   require(grid)
   require(gridGraphics)
-    
+  
   mydata.cor=cor(model,method=c("spearman"))
   spearman.cor<-mydata.cor[,12]
   inputvar<-c("FR","IR","PC","F1.15","F2.15","F1.56","F2.56","F1.610","F2.610",
@@ -157,9 +157,9 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
     scale_x_discrete(name="")+
     scale_y_discrete(name="")+
     ggtitle("Schoen & Ashbolt")
-    
-  }
   
+}
+
 
 schoen.ashbolt(10000,8,100)
 
@@ -172,7 +172,7 @@ schoen.ashbolt(10000,8,100)
 # "volume of aerosols of various size diameters that are large enough to hold
 # L. pneumophila bacteria but small enough to deposit at the alveoli (1 um < diameter < 10um)
 # were considered" - equation 2 from paper
-  
+
 
 hamilton<-function(iterations,showerduration,C.water){
   
@@ -181,34 +181,34 @@ hamilton<-function(iterations,showerduration,C.water){
   #1-iterations
   #2-shower duration (minutes)
   #3-C.water (concentration of L. pneumophila in water - CFU/mL)
-
-
+  
+  
   #truncnorm dist
   require(truncnorm)
-
+  
   #vectors for loop
-
+  
   #Dose for conventional fixture
   Dose.fixture.conv<-rep(0,iterations)
-
+  
   #Dose for water efficient fixture
   Dose.fixture.eff<-rep(0,iterations)
-
+  
   #Breathing rate
   B<-rep(0,iterations)
-
+  
   #Exposure time
   t.shower<-rep(0,iterations)
-
+  
   #Concentration of legionella in water
   C.leg<-rep(0,iterations)
-
+  
   #Probability of infection - conventional fixture
   P.infection.conv<-rep(0,iterations)
-
+  
   #Probability of infection water efficient fixture
   P.infection.eff<-rep(0,iterations)
-
+  
   #Breathing rate (m^3/min) (21 years to greater than 81)
   #used table 6-2 from exposure factors handbook
   #mean of 1.2e-2 and used 1.7e-2 95th percentile to estimate
@@ -297,18 +297,18 @@ hamilton<-function(iterations,showerduration,C.water){
   
   #conventional
   part1.conv<-(C.aer.1.conv*V.1)+(C.aer.2.conv*V.2)+(C.aer.3.conv*V.3)+
-              (C.aer.4.conv*V.4)+(C.aer.5.conv*V.5)+(C.aer.6.conv*V.6)+
-              (C.aer.7.conv*V.7)+(C.aer.8.conv*V.8)+(C.aer.9.conv*V.9)+
-              (C.aer.10.conv*V.10)
+    (C.aer.4.conv*V.4)+(C.aer.5.conv*V.5)+(C.aer.6.conv*V.6)+
+    (C.aer.7.conv*V.7)+(C.aer.8.conv*V.8)+(C.aer.9.conv*V.9)+
+    (C.aer.10.conv*V.10)
   
   #efficient
   part1.eff<-(C.aer.1.eff*V.1)+(C.aer.2.eff*V.2)+(C.aer.3.eff*V.3)+
-             (C.aer.4.eff*V.4)+(C.aer.5.eff*V.5)+(C.aer.6.eff*V.6)+
-             (C.aer.7.eff*V.7)+(C.aer.8.eff*V.8)+(C.aer.9.eff*V.9)+
-             (C.aer.10.eff*V.10)
+    (C.aer.4.eff*V.4)+(C.aer.5.eff*V.5)+(C.aer.6.eff*V.6)+
+    (C.aer.7.eff*V.7)+(C.aer.8.eff*V.8)+(C.aer.9.eff*V.9)+
+    (C.aer.10.eff*V.10)
   
   part2<-(F.1*DE.1)+(F.2*DE.2)+(F.3*DE.3)+(F.4*DE.4)+(F.5*DE.5)+
-              (F.6*DE.6)+(F.7*DE.7)+(F.8*DE.8)+(F.9*DE.9)+(F.10*DE.10)
+    (F.6*DE.6)+(F.7*DE.7)+(F.8*DE.8)+(F.9*DE.9)+(F.10*DE.10)
   
   
   #Dose (conventional fixture)
@@ -356,12 +356,12 @@ hamilton<-function(iterations,showerduration,C.water){
     scale_fill_gradient2(low="99CCCC",mid="white",high="#6666FF",name="",midpoint=0)+
     theme_bw()+
     theme(axis.text.x=element_text(size=16),
-        axis.text.y=element_text(size=16),
-        legend.title=element_text(size=14),
-        legend.text=element_text(size=14),
-        legend.key.width = unit(1, "cm"),
-        plot.title = element_text(hjust = 0.5,size=16),
-        legend.position = "none")+
+          axis.text.y=element_text(size=16),
+          legend.title=element_text(size=14),
+          legend.text=element_text(size=14),
+          legend.key.width = unit(1, "cm"),
+          plot.title = element_text(hjust = 0.5,size=16),
+          legend.position = "none")+
     scale_x_discrete(name="")+
     scale_y_discrete(name="")+ggtitle("Hamilton et al. Conventional")
   
@@ -396,10 +396,10 @@ hamilton<-function(iterations,showerduration,C.water){
   combinedinfection<-data.frame(infectionrisk=c(P.infection.eff,P.infection.conv),
                                 type=c(rep("Water Efficient",iterations),rep("Conventional",iterations)))
   
-    ggplot(data=combinedinfection)+geom_boxplot(aes(y=infectionrisk,x=type,group=type))+
+  ggplot(data=combinedinfection)+geom_boxplot(aes(y=infectionrisk,x=type,group=type))+
     scale_y_continuous(trans="log10",name="Infection Risk")+theme_bw()+scale_x_discrete(name="Shower Type")
-
-  }
+  
+}
 
 hamilton(10000,8,100)
 
@@ -512,4 +512,3 @@ ggarrange(plotA,plotB,plotC,nrow=1)
 #ggarrange(A,B)
 
 #ggplot(frameall)+geom_density(aes(x=infection.risk,group=interaction(showertype,model),fill=interaction(showertype,model)),alpha=0.3)+scale_x_continuous(trans="log10")
-

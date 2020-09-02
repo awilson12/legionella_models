@@ -1,6 +1,11 @@
 require(truncdist)
+require(triangle)
+require(ggplot2)
+require(ggpubr)
 
-hamilton<-function(showerduration,C.water,type="conventional"){
+hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male"){
+  
+  set.seed(34)
   
   
   iterations<-10000
@@ -32,12 +37,136 @@ hamilton<-function(showerduration,C.water,type="conventional"){
   P.infection.eff<-rep(0,iterations)
 
   #Breathing rate (m^3/min) (21 years to greater than 81)
-  #used table 6-2 from exposure factors handbook
-  #mean of 1.2e-2 and used 1.7e-2 95th percentile to estimate
+  #used tables 6-14 and -15 from exposure factors handbook
   #SD where SD ~ (95th percentile-mean)/2
-  sd.breathing<-((1.7E-2)-(1.2E-2))/2
-  B<-rtrunc(iterations,"norm",a=0,mean=1.2E-2,sd=sd.breathing)
+  #left-truncation point = 5th percentile
+  #right-truncation point = maximum
   
+  if (sex=="Male"){
+    
+    if(age>=11 & age<16){
+      percentile.5<-11.40
+      percentile.95<-21.21
+      mean.B<-15.32
+      max.B<-28.54
+      
+    }else if (age>=16 & age<21){
+      percentile.5<-12.60
+      percentile.95<-23.37
+      mean.B<-17.21
+      max.B<-39.21
+      
+    }else if (age>=21 & age<31){
+      percentile.5<-12.69
+      percentile.95<-27.13
+      mean.B<-18.82
+      max.B<-43.42
+      
+    }else if (age>=31 & age<41){
+      percentile.5<-14.00
+      percentile.95<-28.90
+      mean.B<-20.29
+      max.B<-40.72
+      
+    }else if (age>=41 & age<51){
+      percentile.5<-14.66
+      percentile.95<-28.37
+      mean.B<-20.94
+      max.B<-45.98
+      
+    }else if (age>=51 & age<61){
+      percentile.5<-14.99
+      percentile.95<-29.09
+      mean.B<-20.91
+      max.B<-38.17
+      
+    }else if (age>=61 & age<71){
+      percentile.5<-13.91
+      percentile.95<-23.50
+      mean.B<-17.94
+      max.B<-28.09
+      
+    }else if (age>=71 & age<81){
+      percentile.5<-13.10
+      percentile.95<-20.42
+      mean.B<-16.34
+      max.B<-24.52
+      
+    }else if (age>=81){
+      percentile.5<-11.95
+      percentile.95<-18.69
+      mean.B<-15.15
+      max.B<-22.64
+      
+    }
+    
+  }else{ #female
+    
+    if(age>=11 & age<16){
+      percentile.5<-10.47
+      percentile.95<-17.41
+      mean.B<-13.44
+      max.B<-26.58
+      
+    }else if (age>=16 & age<21){
+      percentile.5<-9.86
+      percentile.95<-18.29
+      mean.B<-13.59
+      max.B<-30.11
+      
+    }else if (age>=21 & age<31){
+      percentile.5<-10.15
+      percentile.95<-21.14
+      mean.B<-14.57
+      max.B<-30.23
+      
+    }else if (age>=31 & age<41){
+      percentile.5<-11.07
+      percentile.95<-20.45
+      mean.B<-14.98
+      max.B<-28.28
+      
+    }else if (age>=41 & age<51){
+      percentile.5<-12.11
+      percentile.95<-21.34
+      mean.B<-16.20
+      max.B<-35.88
+      
+    }else if (age>=51 & age<61){
+      percentile.5<-12.33
+      percentile.95<-21.21
+      mean.B<-16.19
+      max.B<-25.70
+      
+    }else if (age>=61 & age<71){
+      percentile.5<-10.40
+      percentile.95<-16.14
+      mean.B<-12.99
+      max.B<-20.33
+      
+    }else if (age>=71 & age<81){
+      percentile.5<-9.89
+      percentile.95<-15.19
+      mean.B<-12.04
+      max.B<-17.70
+      
+    }else if (age>=81){
+      percentile.5<-9.19
+      percentile.95<-13.94
+      mean.B<-11.15
+      max.B<-16.93
+      
+    }
+    
+  }
+  
+  sd.B<-(percentile.95-mean.B)/2
+  B<-rtrunc(iterations,"norm",a=percentile.5,b=max.B,mean=mean.B,sd=sd.B)
+  
+  
+  #adjust by converting m^3/day to m^3/min
+  B<-B/(24*60)
+ 
   #Exposure duration (min)
   t.shower<-showerduration
   
@@ -143,10 +272,13 @@ hamilton<-function(showerduration,C.water,type="conventional"){
   r<-rlnorm(iterations,-2.93,0.49)
   
   P.infection.conv<-1-exp(-r*Dose.fixture.conv)
+  P.infect.conv<<-P.infection.conv
   
   P.infection.eff<-1-exp(-r*Dose.fixture.eff)
+  P.infect.eff<<-P.infection.eff
+  
 
-  if(type=="conventional"){
+  if(type=="Conventional"){
     mean<-signif(mean(P.infection.conv),2)
     sd<-signif(sd(P.infection.conv),2)
   }else{
@@ -167,6 +299,8 @@ hamilton<-function(showerduration,C.water,type="conventional"){
   
 
 }
+
+
 
 
 

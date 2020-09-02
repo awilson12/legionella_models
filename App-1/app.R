@@ -15,7 +15,7 @@ ui <- fluidPage(
       sliderInput(inputId = "C.water",
                   label = "Log10 CFU/mL",
                   min = -3,
-                  max = 8,
+                  max = 4,
                   value=1),
       sliderInput(inputId = "showerduration",
                   label = "Shower duration (min)",
@@ -32,23 +32,23 @@ ui <- fluidPage(
                   label = "Shower Type",
                   choices=c("Conventional","Water Efficient")),
 
-      selectInput(inputId = "age",
-                  label = "Age range",
-                  choices=c("20-29","30-39","40-49",
-                            "50-59","60-69","70-79",
-                            "80-85","85+")),
+      sliderInput(inputId = "age",
+                  label="Age (yrs)",
+                  min=11,
+                  max=81 ,
+                  value=1),
       
       selectInput(inputId = "sex",
                   label = "Sex",
-                  choices=c("Male","Female")),
+                  choices=c("All","Male","Female")),
       
       selectInput(inputId = "race",
                   label = "Race",
-                  choices=c("African American/Black","White","Asian/Pacific Islander","American Indian/Alaskan Native")),
+                  choices=c("All","African American/Black","White","Asian/Pacific Islander","American Indian/Alaskan Native")),
       
       selectInput(inputId = "ethnicity",
                   label = "Ethnicity",
-                  choices=c("Hispanic","Non-Hispanic")),
+                  choices=c("All","Hispanic","Non-Hispanic")),
       
       
       
@@ -75,17 +75,52 @@ server <- function(input, output) {
     
     source("final_model_for_app.R")
     
-    if(input$type=="Conventional"){
-      type="conventional"
-    }else{
-      type="water efficient"
+
+    concentrations<-c(1E-3,1E-2,1E-1,1E0,1E1,1E2,1E3,1E4)
+    
+    mean.ham.eff<-rep(NA,length(concentrations))
+    sd.ham.eff<-rep(NA,length(concentrations))
+    
+    mean.ham.conv<-rep(NA,length(concentrations))
+    sd.ham.conv<-rep(NA,length(concentrations))
+    
+    for (i in 1:length(concentrations)){
+      
+      hamilton(showerduration=input$showerduration,C.water=concentrations[i],type=input$type,sex=input$sex,age=input$age)
+      
+      infectionrisk.all<-c(P.infect.conv,P.infect.eff)
+      model<-c(rep("Hamilton",iterations*2))
+      showertype<-c(rep("Conventional",iterations),rep("Water Efficient",iterations))
+      
+      frameall<-data.frame(infection.risk=infectionrisk.all,model=model,showertype=showertype)
+      
+      if (i==1){
+        frame.total<-frameall
+        frame.total$conc<-concentrations[i]
+      }else{
+        frameall$conc<-concentrations[i]
+        frame.total<-rbind(frame.total,frameall)
+      }
+      
+      mean.ham.eff[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="Water Efficient"])
+      sd.ham.eff[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$showertype=="Water Efficient"])
+      
+      mean.ham.conv[i]<-mean(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="Water Efficient"])
+      sd.ham.conv[i]<-sd(frame.total$infection.risk[frame.total$conc==concentrations[i] & frame.total$model=="Hamilton" & frame.total$showertype!="Water Efficient"])
+      
     }
     
+    mean<-c(mean.ham.eff,mean.ham.conv)
+    sd<-c(sd.ham.eff,sd.ham.conv)
+    model<-c(rep("Hamilton",length(c(mean.ham.eff,mean.ham.conv))))
+    type<-c(rep("Water Efficient",length(mean.ham.eff)),rep("Conventional",length(mean.ham.conv)))
+    conc<-rep(concentrations,2)
+    frame.conc.compare<-data.frame(mean=mean,sd=sd,model=model,type=type,conc=conc)
     
-    source("final_model_for_app.R")
-    hamilton(showerduration=input$showerduration,C.water=10^input$C.water,type=type)
-    frame.conc.compare<-read.csv('C:/Users/wilso/Documents/legionella_models/App-1/frame.conc.compare.csv')
+    frame.conc.compare$type <- factor(frame.conc.compare$type, levels = c("Conventional","Water Efficient"))
     
+    hamilton(showerduration=input$showerduration,C.water=10^input$C.water,type=input$type,age=input$age)
+  
     if(input$threshold=="1/1,000"){
       threshold=1/1000
     }else if (input$threshold=="1/10,000"){
@@ -103,10 +138,9 @@ server <- function(input, output) {
     }
     
     
-    
-    ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=type,color=type),size=1.5)+
-      geom_point(aes(x=conc/1000,y=mean,group=type,color=type),size=6)+
-      geom_errorbar(aes(x=conc/1000,ymin=mean-sd,ymax=mean+sd,group=type,color=type),size=1,width=.2)+
+    ggplot(data=frame.conc.compare)+geom_line(aes(x=conc,y=mean,group=type,color=type),size=1.5)+
+      geom_point(aes(x=conc,y=mean,group=type,color=type),size=6)+
+      geom_errorbar(aes(x=conc,ymin=mean-sd,ymax=mean+sd,group=type,color=type),size=1,width=.2)+
       geom_point(data=frame.run,aes(C.water,y=mean),fill=choice,size=7,shape=23)+
       scale_y_continuous(trans="log10",name="Infection Risk",breaks=10^seq(-8,0,1),
                          labels=c("1/100,000,000","1/10,000,000","1/1,000,000","1/100,000","1/10,000","1/1,000","1/100","1/10","1"))+
