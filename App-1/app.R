@@ -119,7 +119,7 @@ server <- function(input, output) {
     
     frame.conc.compare$type <- factor(frame.conc.compare$type, levels = c("Conventional","Water Efficient"))
     
-    hamilton(showerduration=input$showerduration,C.water=10^input$C.water,type=input$type,age=input$age)
+    hamilton(showerduration=input$showerduration,C.water=10^input$C.water,type=input$type,sex=input$sex,age=input$age)
   
     if(input$threshold=="1/1,000"){
       threshold=1/1000
