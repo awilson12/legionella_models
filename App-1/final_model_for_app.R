@@ -268,6 +268,19 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   #Dose (water efficient fixture)
   Dose.fixture.eff<-C.leg*B*t.shower*part1.eff*part2
   
+  #population doses
+  #used table 6-2 from exposure factors handbook
+  #mean of 1.2e-2 and used 1.7e-2 95th percentile to estimate
+  #SD where SD ~ (95th percentile-mean)/2
+  sd.breathing<-((1.7E-2)-(1.2E-2))/2
+  B.pop<-rtrunc(iterations,"norm",a=0,mean=1.2E-2,sd=sd.breathing)
+  
+  #inhalation rates for whole population
+    
+  Dose.fixture.conv.pop<-C.leg*B.pop*t.shower*part1.conv*part2
+  
+  Dose.fixture.eff.pop<-C.leg*B.pop*t.shower*part1.eff*part2
+  
   #Dose response parameter
   r<-rlnorm(iterations,-2.93,0.49)
   
@@ -276,6 +289,14 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   
   P.infection.eff<-1-exp(-r*Dose.fixture.eff)
   P.infect.eff<<-P.infection.eff
+  
+  #calculating population level infection risks
+  P.infection.conv.pop<-1-exp(-r*Dose.fixture.conv.pop)
+  P.infection.eff.pop<-1-exp(-r*Dose.fixture.eff.pop)
+  
+  #globally saving population level infection risks
+  P.infect.conv.pop<<-P.infection.conv.pop
+  P.infect.eff.pop<<-P.infection.eff.pop
   
 
   if(type=="Conventional"){
