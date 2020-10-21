@@ -302,9 +302,13 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   if(type=="Conventional"){
     mean<-signif(mean(P.infection.conv),2)
     sd<-signif(sd(P.infection.conv),2)
+    
+    mean.pop<-mean(P.infect.conv.pop)
   }else{
     mean<-signif(mean(P.infection.eff),2)
     sd<-signif(sd(P.infection.eff),2)
+    
+    mean.pop<-mean(P.infect.eff.pop)
   }
   
   x<-paste("Infection Risk:",mean,"\u00b1",sd)
@@ -322,42 +326,44 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   
   IR.P<-2.29/100000
   
-  male.matrix<-matrix(ncol=4,nrow=3)
+  male.matrix<-matrix(ncol=4,nrow=4)
   
-  female.matrix<-matrix(ncol=4,nrow=3)
+  female.matrix<-matrix(ncol=4,nrow=4)
   
   colnames(male.matrix)<-c("Native American","Asian/Pacific Islander","African American/Black","White")
   colnames(female.matrix)<-c("Native American","Asian/Pacific Islander","African American/Black","White")
-  rownames(male.matrix)<-c("55-64","65-74","75-84")
-  rownames(female.matrix)<-c("55-64","65-74","75-84")
+  rownames(male.matrix)<-c("55-64","65-74","75-84","85+")
+  rownames(female.matrix)<-c("55-64","65-74","75-84","85+")
   
   male.matrix[1,]<-c(NA,1.72,17.22,6.20)/100000
   male.matrix[2,]<-c(NA,3.22,16.59,8.29)/100000
   male.matrix[3,]<-c(NA,NA,15.34,10.26)/100000
+  male.matrix[4,]<-c(NA,NA,15.65,11.89)/100000
   
   female.matrix[1,]<-c(NA,NA,10.24,3.24)/100000
   female.matrix[2,]<-c(NA,NA,9.31,4.20)/100000
   female.matrix[3,]<-c(NA,NA,9.68,4.63)/100000
+  female.matrix[4,]<-c(NA,NA,10.10,5.84)/100000
   
-  P.illness.male<-matrix(nrow=3,ncol=4)
-  P.illness.female<-matrix(nrow=3,ncol=4)
+  P.illness.male<-matrix(nrow=4,ncol=4)
+  P.illness.female<-matrix(nrow=4,ncol=4)
   
   colnames(P.illness.male)<-c("Native American","Asian/Pacific Islander","African American/Black","White")
   colnames(P.illness.female)<-c("Native American","Asian/Pacific Islander","African American/Black","White")
   
-  rownames(P.illness.male)<-c("55-64","65-74","75-84")
-  rownames(P.illness.female)<-c("55-64","65-74","75-84")
+  rownames(P.illness.male)<-c("55-64","65-74","75-84","85+")
+  rownames(P.illness.female)<-c("55-64","65-74","75-84","85+")
   
   collength<-4
-  rowlength<-3
+  rowlength<-4
   
   for (j in 1:collength){
     for (i in 1:rowlength){
       MR.G.M<-AR * (male.matrix[i,j]/IR.P)
-      P.illness.male[i,j]<-mean*MR.G.M
+      P.illness.male[i,j]<-mean.pop*MR.G.M
       
       MR.G.F<-AR * (female.matrix[i,j]/IR.P)
-      P.illness.female[i,j]<-mean*MR.G.F
+      P.illness.female[i,j]<-mean.pop*MR.G.F
     }
   }
   
