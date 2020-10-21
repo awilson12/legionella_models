@@ -8,7 +8,7 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   set.seed(34)
   
   
-  iterations<-10000
+  iterations<<-10000
   
   #truncnorm dist
   require(truncnorm)
