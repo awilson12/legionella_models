@@ -419,7 +419,7 @@ comparison<-function(iterations,showerduration,C.water){
   
 }
 
-comparison(10000,10,100)
+comparison(10000,7.8,100)
 
 
 windows()
