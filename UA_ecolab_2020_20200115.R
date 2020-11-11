@@ -15,7 +15,7 @@
 
 #---------PART 1 - STOCHASTIC APPROACH TO SCHOEN & ASHBOLT (2011) MODEL--------------------
 
-
+set.seed(34)
 
 # This model is based on one discussed by Schoen & Ashbolt (2011) An in-premise model for
 # Legionella exposure during showering events
@@ -49,7 +49,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #max = high value
   
   #partitioning coefficient
-  PC<-rtriangle(iterations,a=10E-6,c=10E-5,b=19E-5)
+  PC<-rtriangle(iterations,a=1*10^-6,c=1*10^-5,b=1.9*10^-5)
   #min = low value
   #max = (Best estimate value - low value) + Best estimate value
   
@@ -119,6 +119,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   
   #calculating infection risk
   infection.risk<-1-exp(-k*(DD))
+  
   
   #saving inputs and outputs
   
@@ -418,7 +419,7 @@ comparison<-function(iterations,showerduration,C.water){
   
 }
 
-comparison(10000,7.8,100)
+comparison(10000,10,100)
 
 
 windows()
