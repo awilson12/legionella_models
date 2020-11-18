@@ -376,8 +376,8 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   mat.male<<-melt(P.illness.male)
   mat.female<<-melt(P.illness.female)
   
-  sfvalue<<-signif(mat.female$value*100,2)
-  smvalue<<-signif(mat.male$value*100,2)
+  sfvalue<<-signif(mat.female$value,2)
+  smvalue<<-signif(mat.male$value,2)
   
   mat.male<-cbind(mat.male, smvalue)
   mat.female<-cbind(mat.female, sfvalue)

@@ -177,7 +177,7 @@ server <- function(input, output,session) {
       annotate("text",x=1,y=1,label=x.print,size=6)
        
     B<-ggplot(mat.male)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
-      geom_text(aes(label= percent(smvalue/100),x=Var1,y=Var2),size=7)+
+      geom_text(aes(label= percent(smvalue),x=Var1,y=Var2),size=7)+
       scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
       scale_x_discrete(name="Age Range")+
       scale_y_discrete(name="Race")+
@@ -191,7 +191,7 @@ server <- function(input, output,session) {
       guides(fill = guide_colourbar(barwidth = 12, barheight = 1))
     
     C<-ggplot(mat.female)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
-      geom_text(aes(label= percent(sfvalue/100), x=Var1,y=Var2),size=7)+
+      geom_text(aes(label= percent(sfvalue), x=Var1,y=Var2),size=7)+
       scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
       scale_x_discrete(name="Age Range")+
       scale_y_discrete(name="Race")+
