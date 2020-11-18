@@ -9,13 +9,16 @@
 
 
 #------------------------------------------------------------------------------------------
-
+require(truncdist)
+require(triangle)
+require(ggplot2)
+require(ggpubr)
 
 
 
 #---------PART 1 - STOCHASTIC APPROACH TO SCHOEN & ASHBOLT (2011) MODEL--------------------
 
-set.seed(34)
+set.seed(37)
 
 # This model is based on one discussed by Schoen & Ashbolt (2011) An in-premise model for
 # Legionella exposure during showering events
