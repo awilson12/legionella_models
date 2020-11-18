@@ -10,6 +10,7 @@ require(gridExtra)
 require(grid)
 require(gridGraphics)
 
+set.seed(37)
 
 
 #---------PART 1 - STOCHASTIC APPROACH TO SCHOEN & ASHBOLT (2011) MODEL--------------------
