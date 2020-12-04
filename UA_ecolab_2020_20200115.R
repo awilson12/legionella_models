@@ -79,7 +79,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   #12% of aerosols other than 1-5
   
   #fraction of total aerosols of size range 5-6 deposited at the alveoli
-  F2.56<-(1-F2.15)*0.125
+  F2.56<-rtriangle(iterations,a=0.1,c=0.65,b=1)
   
   #--------aerosol size 6 - 10 um----------------
   
@@ -87,7 +87,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   F1.610<-(1-F1.15)*0.56
   
   #fraction of total aerosols of size range 6-10 deposited at the alveoli
-  F2.610<-(1-F2.15)*0.0125
+  F2.610<-rtriangle(iterations,a=0.01,c=0.1,b=1)
   
   ###########################################################
   
