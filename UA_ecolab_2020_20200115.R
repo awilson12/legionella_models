@@ -440,6 +440,14 @@ ggplot(data=frameall,aes(x=showertype,y=infection.risk,group=showertype))+geom_p
   guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
 
 
+mean(frameall$infection.risk[frameall$showertype=="Conventional"])
+sd(frameall$infection.risk[frameall$showertype=="Conventional"])
+
+mean(frameall$infection.risk[frameall$showertype=="Water Efficient"])
+sd(frameall$infection.risk[frameall$showertype=="Water Efficient"])
+
+mean(frameall$infection.risk[frameall$showertype=="Unspecified"])
+sd(frameall$infection.risk[frameall$showertype=="Unspecified"])
 
 concentrations<-c(1E0,1E1,1E2,1E3,1E4,1E5,1E6,1E7)
 

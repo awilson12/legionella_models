@@ -40,6 +40,8 @@ ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),col
   scale_y_continuous(name="Density")+
   scale_x_continuous(name="Deposited Dose",trans="log10")+theme_pubr()
 
+mean(data$Dose[data$model=="Schoen & Ashbolt"])
+mean(data$Dose[data$model=="Hamilton et al"])
 
 test.output<-wilcox.test(data$Dose[data$model=="Schoen & Ashbolt"],data$Dose[data$model=="Hamilton et al"])
 t.test(data$Dose[data$model=="Schoen & Ashbolt"],data$Dose[data$model=="Hamilton et al"])
