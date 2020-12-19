@@ -60,7 +60,7 @@ ui <- fluidPage(
     
     # Main panel for displaying outputs ----
     mainPanel(
-      h1("Infection and Illness Risks",align="center"),
+      h1("Infection Risks and Expected # LD Cases/100,000",align="center"),
       
       plotOutput("infection",width = "80%"),
       br(),
@@ -170,27 +170,27 @@ server <- function(input, output,session) {
       #annotate("text",label=c("1/10,000 Risk Threshold"),x=1e3,y=2e-04,size=5)+
       theme_bw()+
       theme(axis.title = element_text(size=18),axis.text=element_text(size=18),
-            legend.title=element_text(size=18),legend.text=element_text(size=18),
+            legend.title=element_text(size=20),legend.text=element_text(size=18),
             legend.box="vertical",legend.position="top")+
       annotate("text",x=1,y=1,label=x.print,size=6)
        
     B<-ggplot(mat.male)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
       geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
-      scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+      scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("# LD Cases/100,000"))+
       scale_x_discrete(name="Age Range")+
       scale_y_discrete(name="Race")+
       theme_bw()+
       theme(axis.text.x=element_text(size=16),
             axis.text.y=element_text(size=16),
             axis.title=element_text(size=16),
-            legend.title=element_text(size=14),
+            legend.title=element_text(size=20),
             title=element_text(size=16),
             legend.text=element_text(size=14))+ggtitle("Male")+
       guides(fill = guide_colourbar(barwidth = 12, barheight = 1))
     
     C<-ggplot(mat.female)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
       geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
-      scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+      scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("# LD Cases/100,000"))+
       scale_x_discrete(name="Age Range")+
       scale_y_discrete(name="Race")+
       theme_bw()+
@@ -213,7 +213,7 @@ server <- function(input, output,session) {
   
   B<-ggplot(mat.male)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
     geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
-    scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+    scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("#LD Cases/100,000"))+
     scale_x_discrete(name="Age Range")+
     scale_y_discrete(name="Race")+
     theme_bw()+
@@ -227,7 +227,7 @@ server <- function(input, output,session) {
   
   C<-ggplot(mat.female)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
     geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
-    scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+    scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("#LD Cases/100,000"))+
     scale_x_discrete(name="Age Range")+
     scale_y_discrete(name="Race")+
     theme_bw()+

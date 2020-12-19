@@ -360,10 +360,11 @@ hamilton<-function(showerduration,C.water,type="Conventional",age=11,sex="Male")
   for (j in 1:collength){
     for (i in 1:rowlength){
       MR.G.M<-AR * (male.matrix[i,j]/IR.P)
-      P.illness.male[i,j]<-mean.pop*MR.G.M
+      #now converted to per 100,000 people
+      P.illness.male[i,j]<-mean.pop*MR.G.M*100000
       
       MR.G.F<-AR * (female.matrix[i,j]/IR.P)
-      P.illness.female[i,j]<-mean.pop*MR.G.F
+      P.illness.female[i,j]<-mean.pop*MR.G.F*100000
     }
   }
   

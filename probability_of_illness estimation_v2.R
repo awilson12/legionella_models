@@ -51,8 +51,8 @@ mat.male<-melt(P.illness.male)
 mat.female<-melt(P.illness.female)
 
 A<-ggplot(mat.male)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
-  geom_text(aes(label=signif(value*100,2),x=Var1,y=Var2),size=7)+
-  scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+  geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
+  scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("# LD Cases/100,000"))+
   scale_x_discrete(name="Age Range")+
   scale_y_discrete(name="Race")+
   theme_bw()+
@@ -65,8 +65,8 @@ A<-ggplot(mat.male)+geom_tile(aes(x=Var1,y=Var2,fill=value))+
   guides(fill = guide_colourbar(barwidth = 12, barheight = 1))
 
 B<-ggplot(mat.female)+geom_tile(aes(x=Var1,y=Var2,fill=value*100))+
-  geom_text(aes(label=signif(value*100,2),x=Var1,y=Var2),size=7)+
-  scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("Illness Risk"))+
+  geom_text(aes(label=signif(value,2),x=Var1,y=Var2),size=7)+
+  scale_fill_gradient2(low="white",mid="#99CCFF",high="#0066CC",name=expression("# LD Cases/100,000"))+
   scale_x_discrete(name="Age Range")+
   scale_y_discrete(name="Race")+
   theme_bw()+
