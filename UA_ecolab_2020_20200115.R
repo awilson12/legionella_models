@@ -1,14 +1,5 @@
-# Amanda Wilson (AW)
-# Environmental Health Sciences PhD student
-# University of Arizona
-
-#--------------------------Notes-----------------------------------------------------------
-
-# 1/15/2020 - Began stochastic adjustments to Schoen & Ashbolt (2011) paper -AW
 
 
-
-#------------------------------------------------------------------------------------------
 require(truncdist)
 require(triangle)
 require(ggplot2)
