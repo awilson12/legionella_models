@@ -7,7 +7,7 @@ Here, we compare 2 models: One developed by Schoen & Ashbolt (2011), DOI:10.1016
 
 # automated_code.R #
 
-This code can be run to produce figures 1-3 from the drafted manuscript. This file sources on other files 
+This code can be run to produce figures 1-3 from the drafted manuscript. This file sources on other files, which contain code for producing some of these figures.
 
 # App-1 #
 
