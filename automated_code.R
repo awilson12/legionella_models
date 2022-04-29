@@ -43,8 +43,8 @@ ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),col
         legend.position = "none",strip.text = element_text(size=18))+
   facet_wrap(~model,ncol=1)
 
-mean(data$Dose[data$model=="Schoen & Ashbolt"])
-mean(data$Dose[data$model=="Hamilton et al"])
+mean(data$Dose[data$model=="Model 1"])
+mean(data$Dose[data$model=="Model 2"])
 
-test.output<-wilcox.test(data$Dose[data$model=="Schoen & Ashbolt"],data$Dose[data$model=="Hamilton et al"])
-t.test(data$Dose[data$model=="Schoen & Ashbolt"],data$Dose[data$model=="Hamilton et al"])
+test.output<-wilcox.test(data$Dose[data$model=="Model 1"],data$Dose[data$model=="Model 2"])
+t.test(data$Dose[data$model=="Model 1"],data$Dose[data$model=="Model 2"])

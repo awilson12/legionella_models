@@ -20,16 +20,17 @@ ui <- fluidPage(
   
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
-    
     # Sidebar panel for inputs ----
     sidebarPanel(
-      
+      h3(div(HTML("This tool serves as a proof of concept for a risk calculator that could be used in <em>Legionella</em> spp. water management program"))),
       
       sliderInput(inputId = "C.water",
                   label = "Log10 CFU/mL",
                   min = -3,
                   max = 4,
                   value=1),
+      h5("Note that this input is intended for culture results. Use of molecular concentrations will likely lead to overestimations of risk,
+         as not all genome copies will be representative of viable organisms."),
       sliderInput(inputId = "showerduration",
                   label = "Shower duration (min)",
                   min = 1,
@@ -56,7 +57,6 @@ ui <- fluidPage(
                   choices=c("Male","Female")),
     
   ),
-    
     
     # Main panel for displaying outputs ----
     mainPanel(
