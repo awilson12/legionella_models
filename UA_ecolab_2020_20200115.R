@@ -477,7 +477,7 @@ for (i in 1:length(concentrations)){
 
 mean<-c(mean.schoen,mean.ham.eff,mean.ham.conv)
 sd<-c(sd.schoen,sd.ham.eff,sd.ham.conv)
-model<-c(rep("Schoen & Ashbolt",length(mean.schoen)),rep("Hamilton",length(c(mean.ham.eff,mean.ham.conv))))
+model<-c(rep("Model 2",length(mean.schoen)),rep("Model 1",length(c(mean.ham.eff,mean.ham.conv))))
 type<-c(rep("Unspecified",length(mean.schoen)),rep("Water Efficient",length(mean.ham.eff)),rep("Conventional",length(mean.ham.conv)))
 conc<-rep(concentrations,3)
 frame.conc.compare<-data.frame(mean=mean,sd=sd,model=model,type=type,conc=conc)
