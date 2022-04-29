@@ -30,7 +30,7 @@ hamilton(10000,C.air=2.9e3,IR=7.5e-3)
 model.simshower.hamilton<-model
 
 Dose<-c(model.simshower.ashbolt$DD,model.simshower.hamilton$DD)
-model<-c(rep("Schoen & Ashbolt",10000),rep("Hamilton et al",10000))
+model<-c(rep("Model 1",10000),rep("Model 2",10000))
 data<-data.frame(Dose=Dose,model=model)
 
 windows()
@@ -39,7 +39,9 @@ ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),col
   scale_fill_manual(name="",values=c("#0066CC","#3300CC"))+
   scale_y_continuous(name="Density")+
   scale_x_continuous(name="Deposited Dose",trans="log10")+theme_pubr()+
-  theme(axis.text=element_text(size=18),axis.title=element_text(size=18))
+  theme(axis.text=element_text(size=18),axis.title=element_text(size=18),legend.text=element_text(size=14),
+        legend.position = "none",strip.text = element_text(size=18))+
+  facet_wrap(~model,ncol=1)
 
 mean(data$Dose[data$model=="Schoen & Ashbolt"])
 mean(data$Dose[data$model=="Hamilton et al"])
