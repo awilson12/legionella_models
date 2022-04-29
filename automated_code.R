@@ -38,7 +38,8 @@ ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),col
   geom_density(aes(x=Dose,group=model,fill=model),alpha=0.4)+
   scale_fill_manual(name="",values=c("#0066CC","#3300CC"))+
   scale_y_continuous(name="Density")+
-  scale_x_continuous(name="Deposited Dose",trans="log10")+theme_pubr()
+  scale_x_continuous(name="Deposited Dose",trans="log10")+theme_pubr()+
+  theme(axis.text=element_text(size=18),axis.title=element_text(size=18))
 
 mean(data$Dose[data$model=="Schoen & Ashbolt"])
 mean(data$Dose[data$model=="Hamilton et al"])

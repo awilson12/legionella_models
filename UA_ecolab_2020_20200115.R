@@ -126,7 +126,7 @@ schoen.ashbolt<-function(iterations,showerduration,C.water){
   require(gridGraphics)
   
   mydata.cor=cor(model,method=c("spearman"))
-  spearman.cor<-mydata.cor[,12]
+  spearman.cor<-mydata.cor[,8]
   inputvar<-c("FR","IR","PC","F1.15","F2.15",
               "k","DD","Infection Risk")
   outputvar<-"Infection Risk"
@@ -326,13 +326,11 @@ hamilton<-function(iterations,showerduration,C.water){
   P.infection.eff<-1-exp(-r*Dose.fixture.eff)
   
   model.conv<<-data.frame(B=B,C.aer.1.conv,C.aer.2.conv,C.aer.3.conv,C.aer.4.conv,C.aer.5.conv,
-                          C.aer.6.conv,C.aer.7.conv,C.aer.8.conv,C.aer.9.conv,C.aer.10.conv,DE.1,
-                          DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.conv,
+                          DE.1,DE.2,DE.3,DE.4,DE.5,r,Dose.fixture.conv,
                           P.infection.conv)
   
   model.eff<<-data.frame(B=B,C.aer.1.eff,C.aer.2.eff,C.aer.3.eff,C.aer.4.eff,C.aer.5.eff,
-                         C.aer.6.eff,C.aer.7.eff,C.aer.8.eff,C.aer.9.eff,C.aer.10.eff,DE.1,
-                         DE.2,DE.3,DE.4,DE.5,DE.6,DE.7,DE.8,DE.9,DE.10,r,Dose.fixture.eff,
+                         DE.1,DE.2,DE.3,DE.4,DE.5,r,Dose.fixture.eff,
                          P.infection.eff)
   require(ggplot2)
   require(ggpubr)
@@ -342,7 +340,7 @@ hamilton<-function(iterations,showerduration,C.water){
   require(gridGraphics)
   
   mydata.cor.conv=cor(model.conv,method=c("spearman"))
-  spearman.conv<-mydata.cor.conv[,24]
+  spearman.conv<-mydata.cor.conv[,14]
   inputvar<-c("B","C.aer.1.conv","C.aer.2.conv","C.aer.3.conv","C.aer.4.conv","C.aer.5.conv",
               "DE.1","DE.2","DE.3","DE.4","DE.5","k","Dose.fixture.conv",
               "P.infect.conv")
@@ -367,7 +365,7 @@ hamilton<-function(iterations,showerduration,C.water){
   
   
   mydata.cor.eff=cor(model.eff,method=c("spearman"))
-  spearman.eff<-mydata.cor.eff[,24]
+  spearman.eff<-mydata.cor.eff[,14]
   inputvar<-c("B","C.aer.1.eff","C.aer.2.eff","C.aer.3.eff","C.aer.4.eff","C.aer.5.eff",
               "DE.1","DE.2","DE.3","DE.4","DE.5","k","Dose.fixture.eff",
               "P.infect.eff")
@@ -456,7 +454,7 @@ mean.ham.conv<-rep(NA,length(concentrations))
 sd.ham.conv<-rep(NA,length(concentrations))
 
 for (i in 1:length(concentrations)){
-  comparison(1000,7.8,concentrations[i])
+  comparison(10000,7.8,concentrations[i])
   
   if (i==1){
     frame.total<-frameall
