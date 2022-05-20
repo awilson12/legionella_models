@@ -398,6 +398,9 @@ hamilton<-function(iterations,showerduration,C.water){
   
 }
 
+#checking app
+#hamilton(10000,11,100000)
+#mean(model.conv$P.infection.conv)
 hamilton(10000,8,100)
 
 #comparison
