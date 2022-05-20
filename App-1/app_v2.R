@@ -22,7 +22,7 @@ ui <- fluidPage(
   sidebarLayout(
     # Sidebar panel for inputs ----
     sidebarPanel(
-      h3(div(HTML("This tool serves as a proof of concept for a risk calculator that could be used in <em>Legionella</em> spp. water management program"))),
+      h4(div(HTML("This tool serves as a proof of concept for a risk calculator that could be used in <em>Legionella</em> spp. water management program. Disclaimer: The Quantitative Microbial Risk Assessment (QMRA) models are developed from peer-reviewed publications and risk factors for Legionnaires’ disease. These models are not intended for commercial use or purposes.  Methods used for Legionella enumeration may underestimate or overestimate risk." ))),
       
       sliderInput(inputId = "C.water",
                   label = "Log10 CFU/mL",
