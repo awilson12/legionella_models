@@ -425,6 +425,8 @@ windows()
 frameall<-frameall[frameall$model!="Combined",]
 
 frameall$showertype <- factor(frameall$showertype, levels = c("Conventional","Water Efficient","Unspecified"))
+
+tiff("figure2.tiff", units="in",width=7,height=5,res=600)
 ggplot(data=frameall,aes(x=showertype,y=infection.risk,group=showertype))+geom_point(aes(colour=showertype),position=position_jitterdodge(),alpha=0.1,size=2)+scale_y_continuous(trans="log10",name="Infection Risk")+
   scale_x_discrete(name="")+
   scale_colour_manual(values=c("#0066CC","#99CCFF","light blue"),name="")+
@@ -434,7 +436,7 @@ ggplot(data=frameall,aes(x=showertype,y=infection.risk,group=showertype))+geom_p
   theme(axis.title = element_text(size=16),axis.text = element_text(size=16),
         strip.text = element_text(size=16),legend.text = element_text(size=16))+
   guides(colour = guide_legend(override.aes = list(size=3,alpha=1)))
-
+dev.off()
 
 mean(frameall$infection.risk[frameall$showertype=="Conventional"])
 sd(frameall$infection.risk[frameall$showertype=="Conventional"])
@@ -488,7 +490,7 @@ frame.conc.compare<-data.frame(mean=mean,sd=sd,model=model,type=type,conc=conc)
 frame.conc.compare$type <- factor(frame.conc.compare$type, levels = c("Conventional","Water Efficient","Unspecified"))
 
 
-windows()
+tiff("figure1.tiff", units="in",width=12,height=9,res=500)
 ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(type,model),linetype=model,color=type),size=1.5)+
   geom_point(aes(x=conc/1000,y=mean,group=interaction(type,model),color=type),size=6)+
   #geom_ribbon(aes(x=conc/1000,ymax=mean+1.962*sd/sqrt(1000),ymin=mean-sd*1.962/sqrt(1000),group=interaction(type,model),fill=type),alpha=0.8)+
@@ -505,6 +507,7 @@ ggplot(frame.conc.compare)+geom_line(aes(x=conc/1000,y=mean,group=interaction(ty
   theme(axis.title = element_text(size=18),axis.text=element_text(size=18),
         legend.title=element_text(size=18),legend.text=element_text(size=18),
         legend.box="vertical",legend.position="top")
+dev.off()
 
 windows()
 ggarrange(plotA,plotB,plotC,nrow=1)
