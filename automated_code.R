@@ -33,7 +33,7 @@ Dose<-c(model.simshower.ashbolt$DD,model.simshower.hamilton$DD)
 model<-c(rep("Model 1",10000),rep("Model 2",10000))
 data<-data.frame(Dose=Dose,model=model)
 
-windows()
+tiff("figure3.tiff", units="in",width=6,height=7,res=600)
 ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),color="black",bins = 50,alpha=0.3)+
   geom_density(aes(x=Dose,group=model,fill=model),alpha=0.4)+
   scale_fill_manual(name="",values=c("#0066CC","#3300CC"))+
@@ -42,6 +42,7 @@ ggplot(data)+geom_histogram(aes(x=Dose,y=..density..,group=model,fill=model),col
   theme(axis.text=element_text(size=18),axis.title=element_text(size=18),legend.text=element_text(size=14),
         legend.position = "none",strip.text = element_text(size=18))+
   facet_wrap(~model,ncol=1)
+dev.off()
 
 mean(data$Dose[data$model=="Model 1"])
 mean(data$Dose[data$model=="Model 2"])
